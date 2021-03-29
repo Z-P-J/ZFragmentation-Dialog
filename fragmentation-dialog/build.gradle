@@ -9,7 +9,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0"
+        versionName "1.1.6"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -30,7 +30,7 @@ android {
         artifactId = 'Fragmentation-Dialog'
         userOrg = 'z-p-j'
         groupId = 'com.zpj.widget'
-        publishVersion = '1.1.5'
+        publishVersion = '1.1.6'
         desc = 'A powerful library that manage DialogFragment for Android.'
         website = 'https://github.com/Z-P-J/Fragmentation'
         licences = ['Apache-2.0']

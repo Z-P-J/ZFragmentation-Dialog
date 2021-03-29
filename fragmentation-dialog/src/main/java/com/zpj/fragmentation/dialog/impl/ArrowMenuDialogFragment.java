@@ -46,6 +46,8 @@ public class ArrowMenuDialogFragment extends ArrowDialogFragment {
 
     private OnItemClickListener onItemClickListener;
 
+    private int minWidth;
+
     private boolean showDivider = true;
 
     @Override
@@ -60,7 +62,10 @@ public class ArrowMenuDialogFragment extends ArrowDialogFragment {
 
         OptionMenuView mOptionMenuView = new OptionMenuView(context);
         if (mOrientation == LinearLayout.VERTICAL) {
-            mOptionMenuView.setMinimumWidth((int) (ScreenUtils.getScreenWidth(context) / 2.8));
+            if (minWidth <= 0) {
+                minWidth = ScreenUtils.dp2pxInt(160);
+            }
+            mOptionMenuView.setMinimumWidth(minWidth);
         }
         mOptionMenuView.setOrientation(mOrientation);
         if (showDivider) {
@@ -103,6 +108,7 @@ public class ArrowMenuDialogFragment extends ArrowDialogFragment {
         }
 
 
+
     }
 
     private ViewGroup getScrollView(int orientation) {
@@ -123,6 +129,11 @@ public class ArrowMenuDialogFragment extends ArrowDialogFragment {
 
     //----------------------------------setter----------------------------------
 
+
+    public ArrowMenuDialogFragment setMinWidth(int minWidth) {
+        this.minWidth = minWidth;
+        return this;
+    }
 
     public ArrowMenuDialogFragment setShowDivider(boolean showDivider) {
         this.showDivider = showDivider;

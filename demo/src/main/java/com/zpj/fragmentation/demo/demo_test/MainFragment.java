@@ -1,5 +1,6 @@
 package com.zpj.fragmentation.demo.demo_test;
 
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -47,12 +49,13 @@ public class MainFragment extends BaseFragment {
 
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
-
+        FrameLayout flContainer = findViewById(R.id.fl_container);
         Switch switchView = findViewById(R.id.switch_view);
         switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 getActivity().setTheme(isChecked ? R.style.AppThemeDark : R.style.AppThemeLight);
+                flContainer.setBackgroundColor(isChecked ? Color.BLACK : Color.WHITE);
             }
         });
 

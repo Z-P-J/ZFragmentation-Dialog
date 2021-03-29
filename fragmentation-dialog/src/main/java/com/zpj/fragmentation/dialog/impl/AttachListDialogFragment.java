@@ -17,6 +17,7 @@ import com.zpj.fragmentation.dialog.animator.PopupAnimator;
 import com.zpj.fragmentation.dialog.base.AttachDialogFragment;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 import com.zpj.recyclerview.EasyRecyclerView;
+import com.zpj.utils.ScreenUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -33,6 +34,8 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
 
     private IconCallback<T> iconCallback;
     private TitleCallback<T> titleCallback;
+
+    private int minWidth;
 
 
     private final List<T> items = new ArrayList<>();
@@ -59,6 +62,10 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
+        if (minWidth <= 0) {
+//            minWidth = ScreenUtils.getScreenWidth(context) / 2;
+            minWidth = ScreenUtils.dp2pxInt(180);
+        }
         int color = DialogThemeUtils.getDialogBackgroundColor(context);
         ShadowLayout shadowLayout = findViewById(R.id.shadow_layout);
         shadowLayout.setmShadowColor(Color.DKGRAY);
@@ -80,6 +87,7 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
         easyRecyclerView.setData(items)
                 .setItemRes(bindItemLayoutId == 0 ? R.layout._dialog_item_text : bindItemLayoutId)
                 .onBindViewHolder((holder, list, position, payloads) -> {
+                    holder.getItemView().setMinimumWidth(minWidth);
                     TextView tvText = holder.getView(R.id.tv_text);
                     tvText.setTextColor(textColor);
 
@@ -118,6 +126,11 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
                     }
                 })
                 .build();
+    }
+
+    public AttachListDialogFragment<T> setMinWidth(int minWidth) {
+        this.minWidth = minWidth;
+        return this;
     }
 
     /**

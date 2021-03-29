@@ -8,7 +8,7 @@ A powerful library that manage DialogFragment for Fragmentation.
 ````gradle
 // appcompat-v7包是必须的
 implementation 'com.zpj.widget:Fragmentation:1.1.0'
-implementation 'com.zpj.widget:Fragmentation-Dialog:1.1.4'
+implementation 'com.zpj.widget:Fragmentation-Dialog:1.1.5'
 ````
 
 ### LICENSE
