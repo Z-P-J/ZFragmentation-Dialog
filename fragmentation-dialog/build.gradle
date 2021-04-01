@@ -9,7 +9,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
-        versionName "1.1.6"
+        versionName "1.1.7"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -30,7 +30,7 @@ android {
         artifactId = 'Fragmentation-Dialog'
         userOrg = 'z-p-j'
         groupId = 'com.zpj.widget'
-        publishVersion = '1.1.6'
+        publishVersion = '1.1.7'
         desc = 'A powerful library that manage DialogFragment for Android.'
         website = 'https://github.com/Z-P-J/Fragmentation'
         licences = ['Apache-2.0']
@@ -51,7 +51,7 @@ dependencies {
     implementation 'com.zpj.widget:Fragmentation:1.1.1'
     implementation 'com.zpj.utils:ZUtils:1.0.4'
 
-    api 'com.zpj.widget:ZRecyclerView:1.2.0'
+    api 'com.zpj.widget:ZRecyclerView:1.2.1'
     api 'com.zpj.widget:SmoothCheckBox:1.0.0'
 
 //    implementation project(':fragmentation')

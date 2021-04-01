@@ -1,10 +1,12 @@
 package com.zpj.fragmentation.demo.demo_test;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -31,7 +33,9 @@ import com.zpj.fragmentation.dialog.impl.InputDialogFragment;
 import com.zpj.fragmentation.dialog.impl.LoadingDialogFragment;
 import com.zpj.fragmentation.dialog.impl.SelectDialogFragment;
 import com.zpj.fragmentation.dialog.impl.SimpleSelectDialogFragment;
+import com.zpj.fragmentation.dialog.interfaces.IProgressViewHolder;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
+import com.zpj.progressbar.ZProgressBar;
 import com.zpj.recyclerview.EasyViewHolder;
 import com.zpj.recyclerview.IEasy;
 import com.zpj.widget.checkbox.SmoothCheckBox;
@@ -434,6 +438,21 @@ public class MainFragment extends BaseFragment {
             public void onClick(View v) {
                 new ImageViewerDialogFragment<String>()
                         .setSingleSrcView(imageView, originalUrl)
+                        .setProgressViewHolder(new IProgressViewHolder<ZProgressBar>() {
+                            @Override
+                            public ZProgressBar createProgressView(Context context) {
+                                return new ZProgressBar(context);
+                            }
+
+                            @Override
+                            public void onProgressChanged(ZProgressBar progressView, float progress) {
+                                if (progressView.isIntermediateMode()) {
+                                    progressView.setIsIntermediateMode(false);
+                                    progressView.setBorderColor(Color.LTGRAY);
+                                }
+                                progressView.setProgress(progress * progressView.getMaxProgress());
+                            }
+                        })
                         .show(MainFragment.this);
             }
         });

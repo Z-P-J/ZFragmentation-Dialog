@@ -2,6 +2,7 @@ package com.zpj.fragmentation.dialog.impl;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
@@ -27,11 +28,13 @@ import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.animator.PopupAnimator;
 import com.zpj.fragmentation.dialog.base.BaseDialogFragment;
+import com.zpj.fragmentation.dialog.interfaces.IProgressViewHolder;
 import com.zpj.fragmentation.dialog.interfaces.OnDragChangeListener;
 import com.zpj.fragmentation.dialog.utils.ImageLoad;
 import com.zpj.fragmentation.dialog.utils.MyImageLoad;
@@ -69,6 +72,20 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
     protected View customView;
     protected int bgColor = Color.rgb(32, 36, 46);//弹窗的背景颜色，可以自定义
 
+    protected IProgressViewHolder<? extends View> progressViewHolder = new IProgressViewHolder<ProgressBar>() {
+        @Override
+        public ProgressBar createProgressView(Context context) {
+            ProgressBar progressBar = new ProgressBar(context);
+            progressBar.setMax(100);
+            return progressBar;
+        }
+
+        @Override
+        public void onProgressChanged(ProgressBar progressView, float progress) {
+            progressView.setProgress((int) progress * 100);
+        }
+    };
+
     private int backgroundColor = Color.TRANSPARENT;
 
     public interface OnSrcViewUpdateListener<T> {
@@ -102,6 +119,7 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
+
         photoViewContainer = findViewById(R.id.photoViewContainer);
 
         container = findViewById(R.id._image_viewer_dialog_fl_container);
@@ -456,6 +474,12 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
 //        getSupportDelegate().pop();
 //    }
 
+
+    public ImageViewerDialogFragment<T> setProgressViewHolder(IProgressViewHolder<? extends View> progressViewHolder) {
+        this.progressViewHolder = progressViewHolder;
+        return this;
+    }
+
     public ImageViewerDialogFragment<T> setImageUrls(List<T> urls) {
         this.urls.addAll(urls);
         return this;
@@ -560,6 +584,7 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             final ImageViewContainer ivContainer = new ImageViewContainer(container.getContext());
+            ivContainer.setProgressViewHolder(progressViewHolder);
             ivContainer.setTag(position);
             // call LoadImageListener
             ivContainer.showProgressBar();

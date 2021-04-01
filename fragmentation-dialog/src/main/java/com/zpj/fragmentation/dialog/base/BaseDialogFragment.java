@@ -17,6 +17,7 @@ import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.zpj.fragmentation.ISupportFragment;
 import com.zpj.fragmentation.SupportActivity;
 import com.zpj.fragmentation.SupportFragment;
 import com.zpj.fragmentation.dialog.AbstractDialogFragment;
@@ -51,7 +52,7 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
 
     protected IDialog.OnDismissListener onDismissListener;
 
-    private Fragment preFragment;
+    private ISupportFragment preFragment;
 
     protected Drawable bgDrawable;
 
@@ -70,7 +71,7 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
 
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
-        preFragment = (Fragment) getPreFragment();
+        preFragment = getPreFragment();
         FrameLayout flContainer = findViewById(R.id._dialog_fl_container);
         this.rootView = flContainer;
 
@@ -144,28 +145,12 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
                     public void onGlobalLayout() {
                         getRootView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
                         doShowAnimation();
-                        if (preFragment != null) {
-                            preFragment.onPause();
-                        }
+//                        if (preFragment != null) {
+//                            preFragment.onPause();
+//                        }
                     }
                 });
     }
-
-//    @Override
-//    public void onSupportVisible() {
-//        super.onSupportVisible();
-//        if (preFragment != null) {
-//            preFragment.onSupportVisible();
-//        }
-//    }
-
-//    @Override
-//    public void onSupportInvisible() {
-//        super.onSupportInvisible();
-//        if (preFragment != null) {
-//            preFragment.onSupportInvisible();
-//        }
-//    }
 
     @Override
     public void onStart() {
@@ -194,9 +179,10 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
 
     @Override
     public void onDestroy() {
-        if (preFragment != null && preFragment == getPreFragment()) {
-            preFragment.onResume();
+        if (preFragment != null && preFragment == getTopFragment()) {
+            preFragment.onSupportVisible();
         }
+        preFragment = null;
         this.isDismissing = false;
         super.onDestroy();
     }
