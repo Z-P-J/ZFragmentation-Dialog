@@ -225,6 +225,15 @@ public class OkHttpImageLoad {
                 try {
                     URL link = new URL(url);
                     HttpURLConnection connection = (HttpURLConnection) link.openConnection();
+                    int count = 0;
+                    while (connection.getResponseCode() / 100 == 3) {
+                        if (count > 20) {
+                            downloadFail(new ConnectException("too many redirect connection!"));
+                            return;
+                        }
+                        connection = (HttpURLConnection) new URL(connection.getHeaderField("location")).openConnection();
+                        count++;
+                    }
                     if (connection.getResponseCode() / 100 != 2) {
                         downloadFail(new ConnectException("fail to open connection!"));
                         return;
