@@ -15,6 +15,7 @@ import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.animator.PopupAnimator;
 import com.zpj.fragmentation.dialog.animator.ScaleAlphaAnimator;
 import com.zpj.fragmentation.dialog.enums.PopupPosition;
+import com.zpj.fragmentation.dialog.impl.AttachListDialogFragment;
 import com.zpj.fragmentation.dialog.model.OptionMenu;
 import com.zpj.fragmentation.dialog.widget.PopLayout;
 import com.zpj.utils.ScreenUtils;
@@ -26,6 +27,8 @@ public abstract class ArrowDialogFragment extends BaseDialogFragment {
     protected int defaultOffsetY = 0;
     protected int defaultOffsetX = 0;
 
+    private float cornerRadius;
+
     protected boolean isCenterHorizontal = false;
 
     protected View attachView;
@@ -35,9 +38,11 @@ public abstract class ArrowDialogFragment extends BaseDialogFragment {
 
     protected PopLayout mPopLayout;
 
-
-
     private ViewGroup contentView;
+
+    public ArrowDialogFragment() {
+        cornerRadius = ScreenUtils.dp2px(8);
+    }
 
 
     @Override
@@ -69,6 +74,7 @@ public abstract class ArrowDialogFragment extends BaseDialogFragment {
         getImplView().setAlpha(0f);
 
         mPopLayout = findViewById(R.id.arrowPopupContainer);
+        mPopLayout.setRadiusSize((int) cornerRadius);
 
         if (getContentLayoutId() > 0) {
             contentView = (ViewGroup) getLayoutInflater().inflate(getContentLayoutId(), mPopLayout, false);
@@ -192,14 +198,15 @@ public abstract class ArrowDialogFragment extends BaseDialogFragment {
         float x = screenLocation[0] + xOff;
         float y = screenLocation[1] + anchor.getMeasuredHeight() + yOff;
         Log.d(TAG, "x=" + x + " y=" + y);
-        getImplView().post(() -> {
-            getImplView().setTranslationX(x);
-            getImplView().setTranslationY(y);
-            getImplView().setAlpha(1f);
-            popupContentAnimator = new ScaleAlphaAnimator(getImplView(), pivotX, pivotY);
-            popupContentAnimator.initAnimator();
-            popupContentAnimator.animateShow();
-        });
+//        getImplView().post(() -> {
+//
+//        });
+        getImplView().setTranslationX(x);
+        getImplView().setTranslationY(y);
+        getImplView().setAlpha(1f);
+        popupContentAnimator = new ScaleAlphaAnimator(getImplView(), pivotX, pivotY);
+        popupContentAnimator.initAnimator();
+        popupContentAnimator.animateShow();
     }
 
 //    private void show(View anchor, float xOff, float yOff, int mode) {
@@ -305,6 +312,18 @@ public abstract class ArrowDialogFragment extends BaseDialogFragment {
 
     public ViewGroup getContentView() {
         return contentView;
+    }
+
+    public ArrowDialogFragment setCornerRadius(float cornerRadius) {
+        this.cornerRadius = cornerRadius;
+        if (mPopLayout != null) {
+            mPopLayout.setRadiusSize((int) cornerRadius);
+        }
+        return this;
+    }
+
+    public ArrowDialogFragment setCornerRadiusDp(float cornerRadiusDp) {
+        return setCornerRadius(ScreenUtils.dp2px(cornerRadiusDp));
     }
 
     public ArrowDialogFragment setAttachView(View attachView) {

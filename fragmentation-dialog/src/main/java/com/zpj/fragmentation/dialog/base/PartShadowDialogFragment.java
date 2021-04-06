@@ -130,21 +130,23 @@ public abstract class PartShadowDialogFragment extends AttachDialogFragment {
             }
         });
 
-        post(new Runnable() {
-            @Override
-            public void run() {
-                popupContentAnimator = getDialogAnimator((ViewGroup) contentView);
-                if (popupContentAnimator != null) {
-                    popupContentAnimator.initAnimator();
-                    popupContentAnimator.animateShow();
-                }
-                if (shadowBgAnimator != null) {
-                    shadowBgAnimator.initAnimator();
-                    shadowBgAnimator.animateShow();
-                }
-                getImplView().setAlpha(1f);
-            }
-        });
+//        post(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//            }
+//        });
+
+        popupContentAnimator = getDialogAnimator((ViewGroup) contentView);
+        if (popupContentAnimator != null) {
+            popupContentAnimator.initAnimator();
+            popupContentAnimator.animateShow();
+        }
+        if (shadowBgAnimator != null) {
+            shadowBgAnimator.initAnimator();
+            shadowBgAnimator.animateShow();
+        }
+        getImplView().setAlpha(1f);
     }
 
 //    //让触摸透过

@@ -123,7 +123,7 @@ public class ListDialogFragment<T> extends ContainerDialogFragment {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                test(recyclerView);
+                initShadow(recyclerView);
             }
         });
         initRecyclerView(recyclerView, list);
@@ -145,13 +145,13 @@ public class ListDialogFragment<T> extends ContainerDialogFragment {
                         recyclerView.getViewTreeObserver()
                                 .removeOnPreDrawListener(this);
                         ListDialogFragment.super.doShowAnimation();
-                        postOnEnterAnimationEnd(() -> test(recyclerView));
+                        postOnEnterAnimationEnd(() -> initShadow(recyclerView));
                         return false;
                     }
                 });
     }
 
-    private void test(RecyclerView recyclerView) {
+    private void initShadow(RecyclerView recyclerView) {
         if (!recyclerView.canScrollVertically(-1)) {
             shadowBottomView.setVisibility(View.GONE);
         } else {

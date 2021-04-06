@@ -111,6 +111,7 @@ public class MainFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 new AlertDialogFragment()
+
                         .setTitle("内存使用情况")
                         .setContent(R.string.sign_in_success)
 //                        .setAutoDismiss(false)
@@ -120,9 +121,10 @@ public class MainFragment extends BaseFragment {
                                 fragment.start(new TestDialogFragment());
                             }
                         })
+                        .setCornerRadius(getResources().getDisplayMetrics().density * 24)
                         .setGravity(Gravity.BOTTOM)
                         .setMarginHorizontal(getResources().getDimensionPixelSize(R.dimen.bottombar_height))
-                        .setDialogBackground(DialogThemeUtils.getCenterDialogBackground(context))
+//                        .setDialogBackground(DialogThemeUtils.getCenterDialogBackground(context))
                         .show(MainFragment.this);
             }
         });
@@ -303,6 +305,7 @@ public class MainFragment extends BaseFragment {
                         }
                     })
                     .setData(list)
+                    .setCornerRadius(getResources().getDisplayMetrics().density * 24)
                     .show(MainFragment.this);
         });
 
@@ -403,6 +406,7 @@ public class MainFragment extends BaseFragment {
                                 fragment.dismiss();
                             }
                         })
+                        .setCornerRadiusDp(16)
                         .setItems(list)
                         .setAttachView(v)
                         .show(MainFragment.this);
@@ -525,6 +529,7 @@ public class MainFragment extends BaseFragment {
                     Toast.makeText(context, menu.getTitle(), Toast.LENGTH_SHORT).show();
                 })
                 .setAttachView(view)
+                .setCornerRadiusDp(16)
                 .show(context);
     }
 

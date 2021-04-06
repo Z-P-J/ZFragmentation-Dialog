@@ -172,40 +172,42 @@ public abstract class AttachDialogFragment extends BaseDialogFragment {
                 }
             }
 
-            getImplView().post(new Runnable() {
-                @Override
-                public void run() {
-                    translationX = (isShowLeft ? touchPoint.x : maxX) + (isShowLeft ? defaultOffsetX : -defaultOffsetX);
-                    if (isCenterHorizontal) {
-                        //水平居中
-                        if (isShowLeft)
-                            translationX -= width / 2f;
-                        else
-                            translationX += height / 2f;
-                    }
-                    if (isShowUpToTarget()) {
-                        // 应显示在point上方
-                        // translationX: 在左边就和atView左边对齐，在右边就和其右边对齐
-                        translationY = touchPoint.y - height - defaultOffsetY;
-                    } else {
-                        translationY = touchPoint.y + defaultOffsetY;
-                    }
+//            getImplView().post(new Runnable() {
+//                @Override
+//                public void run() {
+//
+//                }
+//            });
 
-                    translationY -= offset;
+            translationX = (isShowLeft ? touchPoint.x : maxX) + (isShowLeft ? defaultOffsetX : -defaultOffsetX);
+            if (isCenterHorizontal) {
+                //水平居中
+                if (isShowLeft)
+                    translationX -= width / 2f;
+                else
+                    translationX += height / 2f;
+            }
+            if (isShowUpToTarget()) {
+                // 应显示在point上方
+                // translationX: 在左边就和atView左边对齐，在右边就和其右边对齐
+                translationY = touchPoint.y - height - defaultOffsetY;
+            } else {
+                translationY = touchPoint.y + defaultOffsetY;
+            }
 
-                    Log.d(TAG, "translationX=" + translationX + " translationY=" + translationY);
+            translationY -= offset;
 
-                    getImplView().setTranslationX(translationX);
-                    getImplView().setTranslationY(translationY);
+            Log.d(TAG, "translationX=" + translationX + " translationY=" + translationY);
 
-                    popupContentAnimator = getDialogAnimator((ViewGroup) getImplView());
-                    if (popupContentAnimator != null) {
-                        popupContentAnimator.initAnimator();
-                        popupContentAnimator.animateShow();
-                    }
-                    getImplView().setAlpha(1f);
-                }
-            });
+            getImplView().setTranslationX(translationX);
+            getImplView().setTranslationY(translationY);
+
+            popupContentAnimator = getDialogAnimator((ViewGroup) getImplView());
+            if (popupContentAnimator != null) {
+                popupContentAnimator.initAnimator();
+                popupContentAnimator.animateShow();
+            }
+            getImplView().setAlpha(1f);
 
         } else {
             // 依附于指定View
@@ -246,34 +248,38 @@ public abstract class AttachDialogFragment extends BaseDialogFragment {
                 }
             }
 
-            getImplView().post(new Runnable() {
-                @Override
-                public void run() {
-                    translationX = (isShowLeft ? rect.left : maxX) + (isShowLeft ? defaultOffsetX : -defaultOffsetX);
-                    if (isCenterHorizontal) {
-                        //水平居中
-                        if (isShowLeft)
-                            translationX += (rect.width() - width) / 2f;
-                        else
-                            translationX -= (rect.width() - width) / 2f;
-                    }
-                    if (isShowUpToTarget()) {
-                        //说明上面的空间比较大，应显示在atView上方
-                        // translationX: 在左边就和atView左边对齐，在右边就和其右边对齐
-//                        translationY = rect.top + rect.height() - height - defaultOffsetY;
-                        translationY = rect.top - height - defaultOffsetY;
-                        if (atViewGravity == AtViewGravity.TOP) {
-                            translationY += rect.height();
-                        }
-                    } else {
-//                        translationY = rect.bottom - rect.height() + defaultOffsetY;
-                        translationY = rect.bottom + defaultOffsetY;
-                        if (atViewGravity == AtViewGravity.TOP) {
-                            translationY -= rect.height();
-                        }
-                    }
+//            getImplView().post(new Runnable() {
+//                @Override
+//                public void run() {
+//
+//                }
+//            });
 
-                    translationY -= offset;
+            translationX = (isShowLeft ? rect.left : maxX) + (isShowLeft ? defaultOffsetX : -defaultOffsetX);
+            if (isCenterHorizontal) {
+                //水平居中
+                if (isShowLeft)
+                    translationX += (rect.width() - width) / 2f;
+                else
+                    translationX -= (rect.width() - width) / 2f;
+            }
+            if (isShowUpToTarget()) {
+                //说明上面的空间比较大，应显示在atView上方
+                // translationX: 在左边就和atView左边对齐，在右边就和其右边对齐
+//                        translationY = rect.top + rect.height() - height - defaultOffsetY;
+                translationY = rect.top - height - defaultOffsetY;
+                if (atViewGravity == AtViewGravity.TOP) {
+                    translationY += rect.height();
+                }
+            } else {
+//                        translationY = rect.bottom - rect.height() + defaultOffsetY;
+                translationY = rect.bottom + defaultOffsetY;
+                if (atViewGravity == AtViewGravity.TOP) {
+                    translationY -= rect.height();
+                }
+            }
+
+            translationY -= offset;
 
 //                    translationY -= ScreenUtils.getStatusBarHeight(context);
 
@@ -285,21 +291,19 @@ public abstract class AttachDialogFragment extends BaseDialogFragment {
 //                        translationY -= ScreenUtils.getStatusBarHeight(context);
 //                    }
 
-                    Log.d(TAG, "translationX=" + translationX + " translationY=" + translationY);
+            Log.d(TAG, "translationX=" + translationX + " translationY=" + translationY);
 
 
-                    getImplView().setTranslationX(translationX);
-                    getImplView().setTranslationY(translationY);
+            getImplView().setTranslationX(translationX);
+            getImplView().setTranslationY(translationY);
 
 
-                    popupContentAnimator = getDialogAnimator((ViewGroup) getImplView());
-                    if (popupContentAnimator != null) {
-                        popupContentAnimator.initAnimator();
-                        popupContentAnimator.animateShow();
-                    }
-                    getImplView().setAlpha(1f);
-                }
-            });
+            popupContentAnimator = getDialogAnimator((ViewGroup) getImplView());
+            if (popupContentAnimator != null) {
+                popupContentAnimator.initAnimator();
+                popupContentAnimator.animateShow();
+            }
+            getImplView().setAlpha(1f);
 
         }
     }

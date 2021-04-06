@@ -15,6 +15,7 @@ import com.lihang.ShadowLayout;
 import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.animator.PopupAnimator;
 import com.zpj.fragmentation.dialog.base.AttachDialogFragment;
+import com.zpj.fragmentation.dialog.base.ContainerDialogFragment;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 import com.zpj.recyclerview.EasyRecyclerView;
 import com.zpj.utils.ScreenUtils;
@@ -32,6 +33,8 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
     protected int tintColor = Color.TRANSPARENT;
     protected int textColor = Color.TRANSPARENT;
 
+    private float cornerRadius;
+
     private IconCallback<T> iconCallback;
     private TitleCallback<T> titleCallback;
 
@@ -40,6 +43,10 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
 
     private final List<T> items = new ArrayList<>();
     private final List<Integer> iconIds = new ArrayList<>();
+
+    public AttachListDialogFragment() {
+        cornerRadius = ScreenUtils.dp2px(8);
+    }
 
     @Override
     protected int getContentLayoutId() {
@@ -69,6 +76,9 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
         int color = DialogThemeUtils.getDialogBackgroundColor(context);
         ShadowLayout shadowLayout = findViewById(R.id.shadow_layout);
         shadowLayout.setmShadowColor(Color.DKGRAY);
+        shadowLayout.setmCornerRadius((int) cornerRadius);
+        CardView cardView = findViewById(R.id.cv_container);
+        cardView.setRadius(cornerRadius);
         try {
             Field mBackGroundColor = ShadowLayout.class.getDeclaredField("mBackGroundColor");
             mBackGroundColor.setAccessible(true);
@@ -164,6 +174,15 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment {
 //        popupInfo.touchPoint = new PointF(x, y);
 //        show();
 //    }
+
+    public AttachListDialogFragment<T> setCornerRadius(float cornerRadius) {
+        this.cornerRadius = cornerRadius;
+        return this;
+    }
+
+    public AttachListDialogFragment<T> setCornerRadiusDp(float cornerRadiusDp) {
+        return setCornerRadius(ScreenUtils.dp2px(cornerRadiusDp));
+    }
 
     public AttachListDialogFragment<T> setTextColor(int textColor) {
         this.textColor = textColor;
