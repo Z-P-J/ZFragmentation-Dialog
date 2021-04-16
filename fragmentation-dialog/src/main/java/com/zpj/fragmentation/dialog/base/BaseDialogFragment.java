@@ -41,6 +41,7 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
 
     private boolean isDismissing;
 
+    protected boolean interceptTouch = true;
     protected boolean cancelable = true;
     protected boolean cancelableInTouchOutside = true;
 
@@ -75,22 +76,10 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
         FrameLayout flContainer = findViewById(R.id._dialog_fl_container);
         this.rootView = flContainer;
 
-        rootView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!cancelable || !cancelableInTouchOutside) {
-                    return;
-                }
-                dismiss();
-            }
-        });
+        if (interceptTouch) {
+            interceptTouch();
+        }
 
-        rootView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return true;
-            }
-        });
 
         implView = (ViewGroup) getLayoutInflater().inflate(getImplLayoutId(), flContainer, false);
         flContainer.addView(implView);
@@ -114,26 +103,6 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
         view.setFocusable(true);
         view.setClickable(true);
     }
-
-//    @Override
-//    public void onEnterAnimationEnd(Bundle savedInstanceState) {
-//        super.onEnterAnimationEnd(savedInstanceState);
-//        rootView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (!cancelable || !cancelableInTouchOutside) {
-//                    return;
-//                }
-//                pop();
-//            }
-//        });
-//        rootView.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                return true;
-//            }
-//        });
-//    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -396,6 +365,40 @@ public abstract class BaseDialogFragment extends AbstractDialogFragment {
         setMarginTop(margin);
         setMarginBottom(margin);
         return this;
+    }
+
+    public BaseDialogFragment setInterceptTouch(boolean interceptTouch) {
+        this.interceptTouch = interceptTouch;
+        if (rootView != null) {
+            if (interceptTouch) {
+                interceptTouch();
+            } else {
+                rootView.setOnClickListener(null);
+                rootView.setOnLongClickListener(null);
+                rootView.setClickable(false);
+                rootView.setLongClickable(false);
+            }
+        }
+        return this;
+    }
+
+    private void interceptTouch() {
+        rootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!cancelable || !cancelableInTouchOutside) {
+                    return;
+                }
+                dismiss();
+            }
+        });
+
+        rootView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return true;
+            }
+        });
     }
 
     public BaseDialogFragment setCancelable(boolean cancelable) {

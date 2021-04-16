@@ -22,7 +22,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
@@ -36,13 +35,12 @@ import com.zpj.fragmentation.dialog.animator.PopupAnimator;
 import com.zpj.fragmentation.dialog.base.BaseDialogFragment;
 import com.zpj.fragmentation.dialog.interfaces.IProgressViewHolder;
 import com.zpj.fragmentation.dialog.interfaces.OnDragChangeListener;
-import com.zpj.fragmentation.dialog.utils.ImageLoad;
-import com.zpj.fragmentation.dialog.utils.MyImageLoad;
+import com.zpj.fragmentation.dialog.utils.ImageLoader;
+import com.zpj.fragmentation.dialog.utils.MyImageLoader;
 import com.zpj.fragmentation.dialog.widget.HackyViewPager;
 import com.zpj.fragmentation.dialog.widget.ImageViewContainer;
 import com.zpj.fragmentation.dialog.widget.PhotoViewContainer;
 import com.zpj.fragmentation.dialog.widget.PlaceholderImageView;
-import com.zpj.utils.ScreenUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +56,7 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
     protected HackyViewPager pager;
     protected ArgbEvaluator argbEvaluator = new ArgbEvaluator();
     protected final List<T> urls = new ArrayList<>();
-    protected MyImageLoad<T> loader = new MyImageLoad<>();
+    protected ImageLoader<T> loader = new MyImageLoader<>();
     protected OnSrcViewUpdateListener<T> srcViewUpdateListener;
     protected int position;
     protected Rect rect = null;
@@ -264,7 +262,10 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
     protected void loadNewUrl(int position, T url) {
         ImageViewContainer ivContainer = pager.findViewWithTag(position);
         ivContainer.showProgressBar();
-        loader.loadImage(url, new ImageLoad.LoadCallback() {
+        if (loader == null) {
+            loader = new MyImageLoader<>();
+        }
+        loader.loadImage(url, new ImageLoader.LoadCallback() {
             @Override
             public void progress(float progress) {
                 ivContainer.setProgress(progress);
@@ -475,6 +476,11 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
 //    }
 
 
+    public ImageViewerDialogFragment<T> setImageLoader(ImageLoader<T> loader) {
+        this.loader = loader;
+        return this;
+    }
+
     public ImageViewerDialogFragment<T> setProgressViewHolder(IProgressViewHolder<? extends View> progressViewHolder) {
         this.progressViewHolder = progressViewHolder;
         return this;
@@ -604,7 +610,10 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment
 //                    }, ivContainer.getPhotoView(), String.valueOf(ivContainer.hashCode()));
 //                }
 //            });
-            loader.loadImage(urls.get(position), new ImageLoad.LoadCallback() {
+            if (loader == null) {
+                loader = new MyImageLoader<>();
+            }
+            loader.loadImage(urls.get(position), new ImageLoader.LoadCallback() {
                 @Override
                 public void progress(float progress) {
                     ivContainer.setProgress(progress);

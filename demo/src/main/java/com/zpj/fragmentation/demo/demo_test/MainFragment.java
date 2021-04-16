@@ -312,7 +312,10 @@ public class MainFragment extends BaseFragment {
         findViewById(R.id.btn_test_full_screen).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TestFullScreenDialogFragment().show(context);
+//                new TestFullScreenDialogFragment().show(context);
+                new TestFullScreenDialogFragment2()
+//                        .setInterceptTouch(false)
+                        .show(context);
             }
         });
 
