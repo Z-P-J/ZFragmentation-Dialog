@@ -4,16 +4,11 @@ import android.view.View;
 
 import com.zpj.fragmentation.dialog.base.BaseDialogFragment;
 import com.zpj.fragmentation.dialog.impl.AlertDialogFragment;
+import com.zpj.fragmentation.dialog.impl.AttachListDialogFragment;
+
+import java.util.List;
 
 public interface IDialog {
-
-    interface OnCancelListener {
-        void onCancel(AlertDialogFragment fragment);
-    }
-
-    interface OnConfirmListener {
-        void onConfirm(AlertDialogFragment fragment);
-    }
 
     interface OnDismissListener {
         void onDismiss();
@@ -28,12 +23,24 @@ public interface IDialog {
     /** The identifier for the neutral button. */
     int BUTTON_NEUTRAL = -3;
 
-    interface OnButtonClickListener<T extends BaseDialogFragment> {
+    interface OnButtonClickListener<T extends BaseDialogFragment<T>> {
         void onClick(T fragment, int which);
     }
 
-    public interface ViewBinder<V extends View, T> {
+    interface ViewBinder<V extends View, T> {
         void onBindView(V view, T item, int position);
+    }
+
+    interface OnViewCreateListener<T> {
+        void onViewCreate(T fragment, View view);
+    }
+
+    public interface OnMultiSelectListener<T, S> {
+        void onSelect(S dialog, List<Integer> selected, List<T> list);
+    }
+
+    public interface OnSingleSelectListener<T, S> {
+        void onSelect(S dialog, int position, T item);
     }
 
 }

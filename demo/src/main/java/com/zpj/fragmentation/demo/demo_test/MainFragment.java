@@ -2,13 +2,16 @@ package com.zpj.fragmentation.demo.demo_test;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -23,9 +26,11 @@ import com.bumptech.glide.request.transition.Transition;
 import com.zpj.fragmentation.BaseFragment;
 import com.zpj.fragmentation.demo.R;
 import com.zpj.fragmentation.dialog.IDialog;
+import com.zpj.fragmentation.dialog.ZDialog;
 import com.zpj.fragmentation.dialog.impl.AlertDialogFragment;
 import com.zpj.fragmentation.dialog.impl.ArrowMenuDialogFragment;
 import com.zpj.fragmentation.dialog.impl.AttachListDialogFragment;
+import com.zpj.fragmentation.dialog.impl.BaseSelectDialogFragment;
 import com.zpj.fragmentation.dialog.impl.BottomDragListDialogFragment;
 import com.zpj.fragmentation.dialog.impl.CheckDialogFragment;
 import com.zpj.fragmentation.dialog.impl.ImageViewerDialogFragment;
@@ -93,7 +98,7 @@ public class MainFragment extends BaseFragment {
         findViewById(R.id.btn_test_center).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialogFragment()
+                ZDialog.alert()
                         .setTitle("内存使用情况")
                         .setContent(R.string.sign_in_success)
 //                        .setAutoDismiss(false)
@@ -110,8 +115,8 @@ public class MainFragment extends BaseFragment {
         findViewById(R.id.btn_test_center_custom).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialogFragment()
-
+                ZDialog.alert()
+                        .setMarginHorizontal(getResources().getDimensionPixelSize(R.dimen.bottombar_height))
                         .setTitle("内存使用情况")
                         .setContent(R.string.sign_in_success)
 //                        .setAutoDismiss(false)
@@ -123,7 +128,7 @@ public class MainFragment extends BaseFragment {
                         })
                         .setCornerRadius(getResources().getDisplayMetrics().density * 24)
                         .setGravity(Gravity.BOTTOM)
-                        .setMarginHorizontal(getResources().getDimensionPixelSize(R.dimen.bottombar_height))
+
 //                        .setDialogBackground(DialogThemeUtils.getCenterDialogBackground(context))
                         .show(MainFragment.this);
             }
@@ -133,7 +138,7 @@ public class MainFragment extends BaseFragment {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new AlertDialogFragment()
+                        ZDialog.alert()
                                 .setTitle("内存使用情况")
                                 .setContent(R.string.large_text)
                                 .show(MainFragment.this);
@@ -164,7 +169,7 @@ public class MainFragment extends BaseFragment {
 //                    .setGravity(Gravity.BOTTOM)
 //                    .show(MainFragment.this);
 
-            new SelectDialogFragment<String>()
+            ZDialog.select()
                     .onBindTitle(new IDialog.ViewBinder<TextView, String>() {
                         @Override
                         public void onBindView(TextView titleView, String item, int position) {
@@ -188,7 +193,10 @@ public class MainFragment extends BaseFragment {
             for (int i = 0; i < 50; i++) {
                 list.add(String.valueOf(System.currentTimeMillis() * Math.random()));
             }
-            new SelectDialogFragment<String>()
+            ZDialog.select()
+                    .setTitle("单选")
+                    .setData(list)
+                    .setShowButtons(false)
                     .onBindTitle(new IDialog.ViewBinder<TextView, String>() {
                         @Override
                         public void onBindView(TextView titleView, String item, int position) {
@@ -201,15 +209,12 @@ public class MainFragment extends BaseFragment {
                             subtitleView.setText(String.valueOf(position));
                         }
                     })
-                    .onSingleSelect(new SelectDialogFragment.OnSingleSelectListener<String>() {
+                    .onSingleSelect(new IDialog.OnSingleSelectListener<String, SelectDialogFragment<String>>() {
                         @Override
                         public void onSelect(SelectDialogFragment<String> dialog, int position, String item) {
                             Toast.makeText(context, item, Toast.LENGTH_SHORT).show();
                         }
                     })
-                    .setTitle("单选")
-                    .setData(list)
-                    .setShowButtons(false)
                     .show(MainFragment.this);
         });
 
@@ -218,7 +223,7 @@ public class MainFragment extends BaseFragment {
             for (int i = 0; i < 50; i++) {
                 list.add(String.valueOf(System.currentTimeMillis() * Math.random()));
             }
-            new SelectDialogFragment<String>()
+            ZDialog.select()
                     .onBindTitle(new IDialog.ViewBinder<TextView, String>() {
                         @Override
                         public void onBindView(TextView titleView, String item, int position) {
@@ -231,7 +236,7 @@ public class MainFragment extends BaseFragment {
                             subtitleView.setText(String.valueOf(position));
                         }
                     })
-                    .onMultiSelect(new SelectDialogFragment.OnMultiSelectListener<String>() {
+                    .onMultiSelect(new IDialog.OnMultiSelectListener<String, SelectDialogFragment<String>>() {
                         @Override
                         public void onSelect(SelectDialogFragment<String> dialog, List<Integer> selected, List<String> list) {
                             Toast.makeText(context, Arrays.toString(list.toArray()), Toast.LENGTH_SHORT).show();
@@ -250,7 +255,7 @@ public class MainFragment extends BaseFragment {
             for (int i = 0; i < 50; i++) {
                 list.add(String.valueOf(System.currentTimeMillis() * Math.random()));
             }
-            new SimpleSelectDialogFragment()
+            ZDialog.simpleSelect()
                     .setTitles(list)
                     .setOnItemClickListener(new IEasy.OnItemClickListener<String>() {
                         @Override
@@ -420,7 +425,7 @@ public class MainFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 List<String> list = new ArrayList<>();
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < 50; i++) {
                     list.add(String.valueOf(i));
                 }
                 new AttachListDialogFragment<String>()
@@ -431,8 +436,42 @@ public class MainFragment extends BaseFragment {
                                 fragment.dismiss();
                             }
                         })
+                        .setMaxHeight(600)
+                        .setMaxWidth(200)
                         .setItems(list)
-                        .setAttachView(v)
+                        .show(v);
+//                        .setAttachView(v)
+//                        .show(MainFragment.this);
+            }
+        });
+
+        View tvTextAttachList = findViewById(R.id.tv_test_attach_list);
+        PointF point = new PointF();
+        tvTextAttachList.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (MotionEvent.ACTION_DOWN == event.getAction()) {
+                    point.x = event.getRawX();
+                    point.y = event.getRawY();
+                }
+                return false;
+            }
+        });
+        tvTextAttachList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<String> list = new ArrayList<>();
+                for (int i = 0; i < 50; i++) {
+                    list.add(String.valueOf(i));
+                }
+                new AttachListDialogFragment<String>()
+                        .setOnSelectListener((fragment, position, text) -> {
+                            Toast.makeText(context, "position=" + position + " text=" + text, Toast.LENGTH_SHORT).show();
+                            fragment.dismiss();
+                        })
+                        .setItems(list)
+                        .setTouchPoint(point)
                         .show(MainFragment.this);
             }
         });

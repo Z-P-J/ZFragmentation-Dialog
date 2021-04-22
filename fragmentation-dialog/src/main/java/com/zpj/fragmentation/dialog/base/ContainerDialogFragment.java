@@ -21,7 +21,7 @@ import com.zpj.utils.ScreenUtils;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
-public abstract class ContainerDialogFragment extends BaseDialogFragment {
+public abstract class ContainerDialogFragment<T extends ContainerDialogFragment<T>> extends BaseDialogFragment<T> {
 
     protected ViewGroup contentView;
 
@@ -180,12 +180,12 @@ public abstract class ContainerDialogFragment extends BaseDialogFragment {
         }
     }
 
-    public ContainerDialogFragment setCornerRadius(float cornerRadius) {
+    public T setCornerRadius(float cornerRadius) {
         this.cornerRadius = cornerRadius;
-        return this;
+        return self();
     }
 
-    public ContainerDialogFragment setCornerRadiusDp(float cornerRadiusDp) {
+    public T setCornerRadiusDp(float cornerRadiusDp) {
         return setCornerRadius(ScreenUtils.dp2px(cornerRadiusDp));
     }
 

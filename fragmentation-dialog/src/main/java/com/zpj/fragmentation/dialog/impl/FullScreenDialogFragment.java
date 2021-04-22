@@ -10,7 +10,7 @@ import com.zpj.fragmentation.dialog.enums.PopupAnimation;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
-public abstract class FullScreenDialogFragment extends BaseDialogFragment {
+public abstract class FullScreenDialogFragment extends BaseDialogFragment<FullScreenDialogFragment> {
 
     @Override
     protected PopupAnimator getDialogAnimator(ViewGroup contentView) {

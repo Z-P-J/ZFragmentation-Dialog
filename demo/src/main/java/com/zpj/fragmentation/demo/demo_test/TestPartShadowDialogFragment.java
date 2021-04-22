@@ -9,7 +9,7 @@ import android.widget.Toast;
 import com.zpj.fragmentation.demo.R;
 import com.zpj.fragmentation.dialog.base.PartShadowDialogFragment;
 
-public class TestPartShadowDialogFragment extends PartShadowDialogFragment {
+public class TestPartShadowDialogFragment extends PartShadowDialogFragment<TestPartShadowDialogFragment> {
 
     @Override
     protected int getContentLayoutId() {

@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ImageViewerDialogFragment<T> extends BaseDialogFragment
+public class ImageViewerDialogFragment<T> extends BaseDialogFragment<ImageViewerDialogFragment<T>>
         implements OnDragChangeListener {
 
 //    private final BlockActionQueue actionQueue = new BlockActionQueue();

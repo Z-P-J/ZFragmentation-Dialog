@@ -22,14 +22,9 @@ import com.zpj.utils.StatusBarUtils;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
-/**
- * Description: 局部阴影的弹窗，类似于淘宝商品列表的下拉筛选弹窗
- * Create by dance, at 2018/12/21
- */
-public abstract class PartShadowDialogFragment extends AttachDialogFragment {
+public abstract class PartShadowDialogFragment<T extends PartShadowDialogFragment<T>> extends AttachDialogFragment<T> {
 
     private static final String TAG = "PartShadowDialog";
-
 
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
