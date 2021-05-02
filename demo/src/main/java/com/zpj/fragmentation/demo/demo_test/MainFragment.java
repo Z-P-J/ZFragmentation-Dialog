@@ -7,11 +7,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -27,17 +25,13 @@ import com.zpj.fragmentation.BaseFragment;
 import com.zpj.fragmentation.demo.R;
 import com.zpj.fragmentation.dialog.IDialog;
 import com.zpj.fragmentation.dialog.ZDialog;
-import com.zpj.fragmentation.dialog.impl.AlertDialogFragment;
 import com.zpj.fragmentation.dialog.impl.ArrowMenuDialogFragment;
 import com.zpj.fragmentation.dialog.impl.AttachListDialogFragment;
-import com.zpj.fragmentation.dialog.impl.BaseSelectDialogFragment;
 import com.zpj.fragmentation.dialog.impl.BottomDragListDialogFragment;
 import com.zpj.fragmentation.dialog.impl.CheckDialogFragment;
 import com.zpj.fragmentation.dialog.impl.ImageViewerDialogFragment;
 import com.zpj.fragmentation.dialog.impl.InputDialogFragment;
 import com.zpj.fragmentation.dialog.impl.LoadingDialogFragment;
-import com.zpj.fragmentation.dialog.impl.SelectDialogFragment;
-import com.zpj.fragmentation.dialog.impl.SimpleSelectDialogFragment;
 import com.zpj.fragmentation.dialog.interfaces.IProgressViewHolder;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 import com.zpj.progressbar.ZProgressBar;
@@ -102,10 +96,10 @@ public class MainFragment extends BaseFragment {
                         .setTitle("内存使用情况")
                         .setContent(R.string.sign_in_success)
 //                        .setAutoDismiss(false)
-                        .setPositiveButton(new IDialog.OnButtonClickListener<AlertDialogFragment>() {
+                        .setPositiveButton(new IDialog.OnButtonClickListener<ZDialog.AlertDialogImpl>() {
                             @Override
-                            public void onClick(AlertDialogFragment fragment, int which) {
-                                fragment.start(new TestDialogFragment());
+                            public void onClick(ZDialog.AlertDialogImpl fragment, int which) {
+
                             }
                         })
                         .show(MainFragment.this);
@@ -120,9 +114,9 @@ public class MainFragment extends BaseFragment {
                         .setTitle("内存使用情况")
                         .setContent(R.string.sign_in_success)
 //                        .setAutoDismiss(false)
-                        .setPositiveButton(new IDialog.OnButtonClickListener<AlertDialogFragment>() {
+                        .setPositiveButton(new IDialog.OnButtonClickListener<ZDialog.AlertDialogImpl>() {
                             @Override
-                            public void onClick(AlertDialogFragment fragment, int which) {
+                            public void onClick(ZDialog.AlertDialogImpl fragment, int which) {
                                 fragment.start(new TestDialogFragment());
                             }
                         })
@@ -209,9 +203,9 @@ public class MainFragment extends BaseFragment {
                             subtitleView.setText(String.valueOf(position));
                         }
                     })
-                    .onSingleSelect(new IDialog.OnSingleSelectListener<String, SelectDialogFragment<String>>() {
+                    .onSingleSelect(new IDialog.OnSingleSelectListener<String, ZDialog.SelectDialogImpl<String>>() {
                         @Override
-                        public void onSelect(SelectDialogFragment<String> dialog, int position, String item) {
+                        public void onSelect(ZDialog.SelectDialogImpl<String> dialog, int position, String item) {
                             Toast.makeText(context, item, Toast.LENGTH_SHORT).show();
                         }
                     })
@@ -236,9 +230,9 @@ public class MainFragment extends BaseFragment {
                             subtitleView.setText(String.valueOf(position));
                         }
                     })
-                    .onMultiSelect(new IDialog.OnMultiSelectListener<String, SelectDialogFragment<String>>() {
+                    .onMultiSelect(new IDialog.OnMultiSelectListener<String, ZDialog.SelectDialogImpl<String>>() {
                         @Override
-                        public void onSelect(SelectDialogFragment<String> dialog, List<Integer> selected, List<String> list) {
+                        public void onSelect(ZDialog.SelectDialogImpl<String> dialog, List<Integer> selected, List<String> list) {
                             Toast.makeText(context, Arrays.toString(list.toArray()), Toast.LENGTH_SHORT).show();
                         }
                     })
@@ -541,14 +535,14 @@ public class MainFragment extends BaseFragment {
         findViewById(R.id.btn_test_arrow_menu_bottom).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showArrowMenuDialogFragment(LinearLayout.HORIZONTAL, v);
+                showArrowMenuDialogFragment(LinearLayout.HORIZONTAL, v, 16);
             }
         });
 
         findViewById(R.id.btn_test_arrow_menu_vertical).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showArrowMenuDialogFragment(LinearLayout.VERTICAL, v);
+                showArrowMenuDialogFragment(LinearLayout.VERTICAL, v, 16);
             }
         });
 
@@ -556,14 +550,14 @@ public class MainFragment extends BaseFragment {
         findViewById(R.id.btn_test_arrow_menu_top).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showArrowMenuDialogFragment(LinearLayout.HORIZONTAL, v);
+                showArrowMenuDialogFragment(LinearLayout.HORIZONTAL, v, 8);
             }
         });
 
 
     }
 
-    private void showArrowMenuDialogFragment(int o, View view) {
+    private void showArrowMenuDialogFragment(int o, View view, int cornerRadius) {
         new ArrowMenuDialogFragment()
                 .setOptionMenus("详细信息", "分享", "卸载", "打开")
                 .setOrientation(o)
@@ -571,7 +565,7 @@ public class MainFragment extends BaseFragment {
                     Toast.makeText(context, menu.getTitle(), Toast.LENGTH_SHORT).show();
                 })
                 .setAttachView(view)
-                .setCornerRadiusDp(16)
+                .setCornerRadiusDp(cornerRadius)
                 .show(context);
     }
 

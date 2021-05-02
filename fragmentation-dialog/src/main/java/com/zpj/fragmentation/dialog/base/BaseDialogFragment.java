@@ -39,7 +39,7 @@ public abstract class BaseDialogFragment<T extends BaseDialogFragment<T>> extend
     private FrameLayout rootView;
     private ViewGroup implView;
 
-    private boolean isDismissing;
+    protected boolean isDismissing;
 
     protected boolean interceptTouch = true;
     protected boolean cancelable = true;

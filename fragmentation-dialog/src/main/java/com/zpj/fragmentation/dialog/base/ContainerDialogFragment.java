@@ -114,8 +114,11 @@ public abstract class ContainerDialogFragment<T extends ContainerDialogFragment<
             bottomPopupContainer.setOnCloseListener(new SmartDragLayout.OnCloseListener() {
                 @Override
                 public void onClose() {
-//                    setFragmentAnimator(new DefaultNoAnimator());
                     postOnEnterAnimationEnd(() -> {
+                        if (isDismissing) {
+                            return;
+                        }
+                        isDismissing = true;
                         ContainerDialogFragment.super.doDismissAnimation();
                         popThis();
                         onDismiss();

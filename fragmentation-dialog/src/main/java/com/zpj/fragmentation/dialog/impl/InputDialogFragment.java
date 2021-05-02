@@ -17,7 +17,7 @@ import com.zpj.utils.ContextUtils;
 import com.zpj.utils.KeyboardObserver;
 import com.zpj.utils.ScreenUtils;
 
-public class InputDialogFragment extends BaseAlertDialogFragment<InputDialogFragment> implements View.OnClickListener {
+public class InputDialogFragment extends AlertDialogFragment<InputDialogFragment> implements View.OnClickListener {
 
     private boolean autoShowKeyboard = true;
     private boolean emptyable = false;

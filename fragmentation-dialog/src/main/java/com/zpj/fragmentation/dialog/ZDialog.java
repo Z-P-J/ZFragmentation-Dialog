@@ -3,20 +3,32 @@ package com.zpj.fragmentation.dialog;
 import com.zpj.fragmentation.dialog.impl.AlertDialogFragment;
 import com.zpj.fragmentation.dialog.impl.ArrowMenuDialogFragment;
 import com.zpj.fragmentation.dialog.impl.AttachListDialogFragment;
+import com.zpj.fragmentation.dialog.impl.ListDialogFragment;
 import com.zpj.fragmentation.dialog.impl.BottomDragListDialogFragment;
 import com.zpj.fragmentation.dialog.impl.BottomDragSelectDialogFragment;
 import com.zpj.fragmentation.dialog.impl.CheckDialogFragment;
 import com.zpj.fragmentation.dialog.impl.ImageViewerDialogFragment;
 import com.zpj.fragmentation.dialog.impl.InputDialogFragment;
-import com.zpj.fragmentation.dialog.impl.ListDialogFragment;
 import com.zpj.fragmentation.dialog.impl.LoadingDialogFragment;
 import com.zpj.fragmentation.dialog.impl.SelectDialogFragment;
 import com.zpj.fragmentation.dialog.impl.SimpleSelectDialogFragment;
 
 public class ZDialog {
 
-    public static AlertDialogFragment alert() {
-        return new AlertDialogFragment();
+    public static class AlertDialogImpl extends AlertDialogFragment<AlertDialogImpl> {
+
+    }
+
+    public static class ListDialogImpl<T> extends ListDialogFragment<T, ListDialogImpl<T>> {
+
+    }
+
+    public static class SelectDialogImpl<T> extends SelectDialogFragment<T, SelectDialogImpl<T>> {
+
+    }
+
+    public static AlertDialogFragment<AlertDialogImpl> alert() {
+        return new AlertDialogImpl();
     }
 
     public static CheckDialogFragment check() {
@@ -39,11 +51,11 @@ public class ZDialog {
         return imageViewer(String.class);
     }
 
-    public static <T> SelectDialogFragment<T> select(Class<T> tClass) {
-        return new SelectDialogFragment<>();
+    public static <T> SelectDialogImpl<T> select(Class<T> tClass) {
+        return new SelectDialogImpl<>();
     }
 
-    public static SelectDialogFragment<String> select() {
+    public static SelectDialogImpl<String> select() {
         return select(String.class);
     }
 
@@ -51,12 +63,12 @@ public class ZDialog {
         return new SimpleSelectDialogFragment();
     }
 
-    public static <T> ListDialogFragment<T> list(Class<T> tClass) {
-        return new ListDialogFragment<>();
+    public static <T> ListDialogImpl<T> list(Class<T> tClass) {
+        return new ListDialogImpl<>();
     }
 
-    public static ListDialogFragment<String> list() {
-        return new ListDialogFragment<>();
+    public static ListDialogImpl<String> list() {
+        return list(String.class);
     }
 
     public static <T> BottomDragSelectDialogFragment<T> bottomSelect(Class<T> tClass) {

@@ -3,8 +3,6 @@ package com.zpj.fragmentation.dialog;
 import android.view.View;
 
 import com.zpj.fragmentation.dialog.base.BaseDialogFragment;
-import com.zpj.fragmentation.dialog.impl.AlertDialogFragment;
-import com.zpj.fragmentation.dialog.impl.AttachListDialogFragment;
 
 import java.util.List;
 

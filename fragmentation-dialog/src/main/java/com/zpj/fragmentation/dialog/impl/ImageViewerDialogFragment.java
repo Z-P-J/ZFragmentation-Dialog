@@ -49,8 +49,6 @@ import java.util.List;
 public class ImageViewerDialogFragment<T> extends BaseDialogFragment<ImageViewerDialogFragment<T>>
         implements OnDragChangeListener {
 
-//    private final BlockActionQueue actionQueue = new BlockActionQueue();
-
     protected FrameLayout container;
     protected PhotoViewContainer photoViewContainer;
     protected HackyViewPager pager;
@@ -426,18 +424,6 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment<ImageViewer
 
             }
         });
-//        if (customView != null)
-//            customView.animate()
-//                    .alpha(0f)
-//                    .setDuration(DEFAULT_ANIM_DURATION)
-//                    .setListener(new AnimatorListenerAdapter() {
-//                        @Override
-//                        public void onAnimationEnd(Animator animation) {
-//                            super.onAnimationEnd(animation);
-//                            if (customView != null) customView.setVisibility(View.INVISIBLE);
-//                        }
-//                    })
-//                    .start();
     }
 
     @Override
@@ -445,36 +431,6 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment<ImageViewer
         dismiss();
         return true;
     }
-
-//    @Override
-//    public void dismiss() {
-//        if (srcViewUpdateListener != null) {
-//            srcViewUpdateListener.onSrcViewUpdate(ImageViewerDialogFragment3.this, position);
-//        }
-//        if (srcView != null) {
-//            //snapshotView拥有当前pager中photoView的样子(matrix)
-////            PhotoView current = (PhotoView) pager.getChildAt(pager.getCurrentItem());
-////            XPhotoView current = pager.findViewWithTag(pager.getCurrentItem());
-////            if (current != null) {
-////                Matrix matrix = new Matrix();
-////                current.getSuppMatrix(matrix);
-////                snapshotView.setSuppMatrix(matrix);
-////            }
-//            ImageViewContainer current = pager.findViewWithTag(pager.getCurrentItem());
-//            if (current != null) {
-//                Matrix matrix = current.getPhotoView().getSupportMatrix();
-//                if (matrix != null) {
-//                    snapshotView.setSupportMatrix(matrix);
-//                }
-//
-//            }
-////            setSrcView(srcView, position);
-//        }
-//        doDismissAnimation();
-//        pop();
-//        getSupportDelegate().pop();
-//    }
-
 
     public ImageViewerDialogFragment<T> setImageLoader(ImageLoader<T> loader) {
         this.loader = loader;

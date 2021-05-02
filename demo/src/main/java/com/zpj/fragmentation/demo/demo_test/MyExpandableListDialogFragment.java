@@ -10,14 +10,14 @@ import com.zpj.fragmentation.demo.R;
 import com.zpj.fragmentation.dialog.animator.PopupAnimator;
 import com.zpj.fragmentation.dialog.animator.ScaleAlphaAnimator;
 import com.zpj.fragmentation.dialog.enums.PopupAnimation;
-import com.zpj.fragmentation.dialog.impl.BaseListDialogFragment;
+import com.zpj.fragmentation.dialog.impl.ListDialogFragment;
 import com.zpj.recyclerview.MultiData;
 import com.zpj.recyclerview.MultiRecyclerViewWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyExpandableListDialogFragment extends BaseListDialogFragment<MultiData<?>, MyExpandableListDialogFragment> {
+public class MyExpandableListDialogFragment extends ListDialogFragment<MultiData<?>, MyExpandableListDialogFragment> {
 
     private View anchorView;
 
