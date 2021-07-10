@@ -21,7 +21,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.zpj.fragmentation.BaseFragment;
+import com.zpj.fragmentation.SimpleFragment;
 import com.zpj.fragmentation.demo.R;
 import com.zpj.fragmentation.dialog.IDialog;
 import com.zpj.fragmentation.dialog.ZDialog;
@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainFragment extends BaseFragment {
+public class MainFragment extends SimpleFragment {
 
     @Override
     protected int getLayoutId() {

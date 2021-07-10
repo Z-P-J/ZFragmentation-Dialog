@@ -3,12 +3,13 @@ A powerful library that manage DialogFragment for Fragmentation.
 
 ## 如何使用
 
+[![](https://jitpack.io/v/Z-P-J/Fragmentation-Dialog.svg)](https://jitpack.io/#Z-P-J/Fragmentation-Dialog)
 **1. 项目下app的build.gradle中依赖：**
 
 ````gradle
 // appcompat-v7包是必须的
-implementation 'com.zpj.widget:Fragmentation:1.1.1'
-implementation 'com.zpj.widget:Fragmentation-Dialog:1.1.7'
+implementation 'com.github.Z-P-J:Fragmentation:1.0.0'
+implementation 'com.github.Z-P-J:Fragmentation-Dialog:1.0.0'
 ````
 
 ### LICENSE
