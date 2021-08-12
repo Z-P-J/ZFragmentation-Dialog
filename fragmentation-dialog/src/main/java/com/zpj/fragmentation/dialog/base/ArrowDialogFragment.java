@@ -8,16 +8,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.zpj.fragmentation.dialog.R;
-import com.zpj.fragmentation.dialog.animator.PopupAnimator;
+import com.zpj.fragmentation.dialog.animator.DialogAnimator;
 import com.zpj.fragmentation.dialog.animator.ScaleAlphaAnimator;
-import com.zpj.fragmentation.dialog.enums.PopupPosition;
-import com.zpj.fragmentation.dialog.impl.AttachListDialogFragment;
-import com.zpj.fragmentation.dialog.model.OptionMenu;
+import com.zpj.fragmentation.dialog.enums.DialogPosition;
 import com.zpj.fragmentation.dialog.widget.PopLayout;
 import com.zpj.utils.ScreenUtils;
 
@@ -35,7 +32,7 @@ public abstract class ArrowDialogFragment<T extends ArrowDialogFragment<T>> exte
     protected View attachView;
     protected PointF touchPoint = null;
 
-    protected PopupPosition popupPosition = null;
+    protected DialogPosition dialogPosition = null;
 
     protected PopLayout mPopLayout;
 
@@ -54,7 +51,7 @@ public abstract class ArrowDialogFragment<T extends ArrowDialogFragment<T>> exte
     protected abstract int getContentLayoutId();
 
     @Override
-    protected PopupAnimator getDialogAnimator(ViewGroup contentView) {
+    protected DialogAnimator onCreateDialogAnimator(ViewGroup contentView) {
         return null;
     }
 
@@ -67,7 +64,6 @@ public abstract class ArrowDialogFragment<T extends ArrowDialogFragment<T>> exte
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
         if (attachView == null && touchPoint == null) {
-//            throw new IllegalArgumentException("atView() or touchPoint must not be null for AttachPopupView ！");
             dismiss();
             return;
         }
@@ -88,27 +84,13 @@ public abstract class ArrowDialogFragment<T extends ArrowDialogFragment<T>> exte
 
     }
 
-//    @Override
-//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-//        mPopLayout
-//                .getViewTreeObserver()
-//                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//                    @Override
-//                    public void onGlobalLayout() {
-//                        mPopLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-//                        show(attachView, null, touchPoint);
-//                    }
-//                });
-//    }
-
     @Override
     public void doShowAnimation() {
         super.doShowAnimation();
         show(attachView, null, touchPoint);
     }
 
-    public void show(View anchor, RectF frame, PointF origin) {
+    private void show(View anchor, RectF frame, PointF origin) {
 
         if (origin == null) {
             origin = new PointF(-1, -1);
@@ -205,9 +187,8 @@ public abstract class ArrowDialogFragment<T extends ArrowDialogFragment<T>> exte
         getImplView().setTranslationX(x);
         getImplView().setTranslationY(y);
         getImplView().setAlpha(1f);
-        popupContentAnimator = new ScaleAlphaAnimator(getImplView(), pivotX, pivotY);
-        popupContentAnimator.initAnimator();
-        popupContentAnimator.animateShow();
+        mDialogAnimator = new ScaleAlphaAnimator(getImplView(), pivotX, pivotY);
+        mDialogAnimator.animateToShow();
     }
 
 //    private void show(View anchor, float xOff, float yOff, int mode) {
@@ -364,8 +345,8 @@ public abstract class ArrowDialogFragment<T extends ArrowDialogFragment<T>> exte
         return self();
     }
 
-    public T setPopupPosition(PopupPosition popupPosition) {
-        this.popupPosition = popupPosition;
+    public T setDialogPosition(DialogPosition dialogPosition) {
+        this.dialogPosition = dialogPosition;
         return self();
     }
 

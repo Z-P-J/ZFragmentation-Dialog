@@ -31,12 +31,12 @@ import android.widget.ProgressBar;
 
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.zpj.fragmentation.dialog.R;
-import com.zpj.fragmentation.dialog.animator.PopupAnimator;
+import com.zpj.fragmentation.dialog.animator.DialogAnimator;
 import com.zpj.fragmentation.dialog.base.BaseDialogFragment;
 import com.zpj.fragmentation.dialog.interfaces.IProgressViewHolder;
 import com.zpj.fragmentation.dialog.interfaces.OnDragChangeListener;
 import com.zpj.fragmentation.dialog.utils.ImageLoader;
-import com.zpj.fragmentation.dialog.utils.MyImageLoader;
+import com.zpj.fragmentation.dialog.utils.DefaultImageLoader;
 import com.zpj.fragmentation.dialog.widget.HackyViewPager;
 import com.zpj.fragmentation.dialog.widget.ImageViewContainer;
 import com.zpj.fragmentation.dialog.widget.PhotoViewContainer;
@@ -54,7 +54,7 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment<ImageViewer
     protected HackyViewPager pager;
     protected ArgbEvaluator argbEvaluator = new ArgbEvaluator();
     protected final List<T> urls = new ArrayList<>();
-    protected ImageLoader<T> loader = new MyImageLoader<>();
+    protected ImageLoader<T> loader = new DefaultImageLoader<>();
     protected OnSrcViewUpdateListener<T> srcViewUpdateListener;
     protected int position;
     protected Rect rect = null;
@@ -99,12 +99,12 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment<ImageViewer
     }
 
     @Override
-    protected PopupAnimator getDialogAnimator(ViewGroup contentView) {
+    protected DialogAnimator onCreateDialogAnimator(ViewGroup contentView) {
         return null;
     }
 
     @Override
-    protected PopupAnimator getShadowAnimator(FrameLayout flContainer) {
+    protected DialogAnimator onCreateShadowAnimator(FrameLayout flContainer) {
         return null;
     }
 
@@ -261,7 +261,7 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment<ImageViewer
         ImageViewContainer ivContainer = pager.findViewWithTag(position);
         ivContainer.showProgressBar();
         if (loader == null) {
-            loader = new MyImageLoader<>();
+            loader = new DefaultImageLoader<>();
         }
         loader.loadImage(url, new ImageLoader.LoadCallback() {
             @Override
@@ -550,24 +550,8 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment<ImageViewer
             ivContainer.setTag(position);
             // call LoadImageListener
             ivContainer.showProgressBar();
-//            actionQueue.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    loader.loadImage(urls.get(position), new ImageLoad.LoadCallback() {
-//                        @Override
-//                        public void progress(float progress) {
-//                            ivContainer.setProgress(progress);
-//                        }
-//
-//                        @Override
-//                        public void loadFinish(Drawable drawable) {
-//                            ivContainer.onLoadFinished();
-//                        }
-//                    }, ivContainer.getPhotoView(), String.valueOf(ivContainer.hashCode()));
-//                }
-//            });
             if (loader == null) {
-                loader = new MyImageLoader<>();
+                loader = new DefaultImageLoader<>();
             }
             loader.loadImage(urls.get(position), new ImageLoader.LoadCallback() {
                 @Override
@@ -580,18 +564,6 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment<ImageViewer
                     ivContainer.onLoadFinished();
                 }
             }, ivContainer, String.valueOf(ivContainer.hashCode()));
-//            loader.loadImage(urls.get(position), new ImageLoad.LoadCallback() {
-//                @Override
-//                public void progress(float progress) {
-//
-//                }
-//
-//                @Override
-//                public void loadFinish(Drawable drawable) {
-//
-//                }
-//            }, photoView, String.valueOf(view.hashCode()));
-
             container.addView(ivContainer);
 //            ivContainer.setOnClickListener(new View.OnClickListener() {
 //                @Override

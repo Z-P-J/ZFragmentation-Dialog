@@ -8,7 +8,7 @@ import android.widget.Toast;
 import com.zpj.fragmentation.demo.R;
 import com.zpj.fragmentation.dialog.base.BottomDragDialogFragment;
 
-public class TestBottomDragDialogFragment extends BottomDragDialogFragment<TestBottomDragDialogFragment> {
+public class TestBottomDragDialogFragment extends BottomDragDialogFragment {
 
     @Override
     protected int getContentLayoutId() {

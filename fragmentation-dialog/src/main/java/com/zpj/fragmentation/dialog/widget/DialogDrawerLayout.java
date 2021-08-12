@@ -17,9 +17,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 
-import com.zpj.fragmentation.dialog.animator.ShadowBgAnimator;
+import com.zpj.fragmentation.dialog.animator.ShadowMaskAnimator;
 import com.zpj.fragmentation.dialog.enums.LayoutStatus;
-import com.zpj.fragmentation.dialog.enums.PopupPosition;
+import com.zpj.fragmentation.dialog.enums.DialogPosition;
 import com.zpj.utils.StatusBarUtils;
 import com.zpj.utils.ViewUtils;
 
@@ -28,33 +28,34 @@ import com.zpj.utils.ViewUtils;
  * 动画是根据手势滑动而发生的
  * Create by dance, at 2018/12/20
  */
-public class PopupDrawerLayout extends FrameLayout {
+public class DialogDrawerLayout extends FrameLayout {
+
+    private final ShadowMaskAnimator bgAnimator = new ShadowMaskAnimator(null);
 
     LayoutStatus status = null;
     ViewDragHelper dragHelper;
     View placeHolder, mChild;
-    public PopupPosition position = PopupPosition.Left;
-    ShadowBgAnimator bgAnimator = new ShadowBgAnimator();
+    public DialogPosition position = DialogPosition.Left;
     ArgbEvaluator argbEvaluator = new ArgbEvaluator();
     int defaultColor = Color.TRANSPARENT;
     public boolean isDrawStatusBarShadow = false;
     float fraction = 0f;
     public boolean enableShadow = true;
 
-    public PopupDrawerLayout(Context context) {
+    public DialogDrawerLayout(Context context) {
         this(context, null);
     }
 
-    public PopupDrawerLayout(Context context, AttributeSet attrs) {
+    public DialogDrawerLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public PopupDrawerLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public DialogDrawerLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         dragHelper = ViewDragHelper.create(this, callback);
     }
 
-    public void setDrawerPosition(PopupPosition position) {
+    public void setDrawerPosition(DialogPosition position) {
         this.position = position;
     }
 
@@ -77,7 +78,7 @@ public class PopupDrawerLayout extends FrameLayout {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         placeHolder.layout(0,0, placeHolder.getMeasuredWidth(), placeHolder.getMeasuredHeight());
         if (!hasLayout) {
-            if (position == PopupPosition.Left) {
+            if (position == DialogPosition.Left) {
                 mChild.layout(-mChild.getMeasuredWidth(), 0, 0, getMeasuredHeight());
             } else {
                 mChild.layout(getMeasuredWidth(), 0, getMeasuredWidth() + mChild.getMeasuredWidth(), getMeasuredHeight());
@@ -181,13 +182,13 @@ public class PopupDrawerLayout extends FrameLayout {
 
         private void calcFraction(int left){
             // fraction = (now - start) * 1f / (end - start)
-            if (position == PopupPosition.Left) {
+            if (position == DialogPosition.Left) {
                 fraction = (left + mChild.getMeasuredWidth()) * 1f / mChild.getMeasuredWidth();
                 if (left == -mChild.getMeasuredWidth() && listener != null && status != LayoutStatus.Close) {
                     status = LayoutStatus.Close;
                     listener.onClose();
                 }
-            } else if (position == PopupPosition.Right) {
+            } else if (position == DialogPosition.Right) {
                 fraction = (getMeasuredWidth() - left) * 1f / mChild.getMeasuredWidth();
                 if (left == getMeasuredWidth() && listener != null && status != LayoutStatus.Close) {
                     status = LayoutStatus.Close;
@@ -218,7 +219,7 @@ public class PopupDrawerLayout extends FrameLayout {
 
             int centerLeft = 0;
             int finalLeft = 0;
-            if (position == PopupPosition.Left) {
+            if (position == DialogPosition.Left) {
                 if (xvel < -1000) {
                     finalLeft = -mChild.getMeasuredWidth();
                 } else {
@@ -234,15 +235,15 @@ public class PopupDrawerLayout extends FrameLayout {
                 }
             }
             dragHelper.smoothSlideViewTo(mChild, finalLeft, releasedChild.getTop());
-            ViewCompat.postInvalidateOnAnimation(PopupDrawerLayout.this);
+            ViewCompat.postInvalidateOnAnimation(DialogDrawerLayout.this);
         }
     };
 
     private int fixLeft(int left) {
-        if (position == PopupPosition.Left) {
+        if (position == DialogPosition.Left) {
             if (left < -mChild.getMeasuredWidth()) left = -mChild.getMeasuredWidth();
             if (left > 0) left = 0;
-        } else if (position == PopupPosition.Right) {
+        } else if (position == DialogPosition.Right) {
             if (left < (getMeasuredWidth() - mChild.getMeasuredWidth()))
                 left = (getMeasuredWidth() - mChild.getMeasuredWidth());
             if (left > getMeasuredWidth()) left = getMeasuredWidth();
@@ -289,8 +290,8 @@ public class PopupDrawerLayout extends FrameLayout {
         post(new Runnable() {
             @Override
             public void run() {
-                dragHelper.smoothSlideViewTo(mChild, position == PopupPosition.Left ? 0 : (mChild.getLeft() - mChild.getMeasuredWidth()), 0);
-                ViewCompat.postInvalidateOnAnimation(PopupDrawerLayout.this);
+                dragHelper.smoothSlideViewTo(mChild, position == DialogPosition.Left ? 0 : (mChild.getLeft() - mChild.getMeasuredWidth()), 0);
+                ViewCompat.postInvalidateOnAnimation(DialogDrawerLayout.this);
             }
         });
     }
@@ -305,8 +306,8 @@ public class PopupDrawerLayout extends FrameLayout {
         post(new Runnable() {
             @Override
             public void run() {
-                dragHelper.smoothSlideViewTo(mChild, position == PopupPosition.Left ? -mChild.getMeasuredWidth() : getMeasuredWidth(), 0);
-                ViewCompat.postInvalidateOnAnimation(PopupDrawerLayout.this);
+                dragHelper.smoothSlideViewTo(mChild, position == DialogPosition.Left ? -mChild.getMeasuredWidth() : getMeasuredWidth(), 0);
+                ViewCompat.postInvalidateOnAnimation(DialogDrawerLayout.this);
             }
         });
     }

@@ -11,10 +11,11 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.zpj.fragmentation.dialog.animator.PopupAnimator;
+import com.zpj.fragmentation.dialog.animator.DialogAnimator;
+import com.zpj.fragmentation.dialog.animator.ShadowMaskAnimator;
 import com.zpj.fragmentation.dialog.animator.TranslateAnimator;
-import com.zpj.fragmentation.dialog.enums.PopupAnimation;
-import com.zpj.fragmentation.dialog.enums.PopupPosition;
+import com.zpj.fragmentation.dialog.enums.DialogAnimation;
+import com.zpj.fragmentation.dialog.enums.DialogPosition;
 import com.zpj.fragmentation.dialog.interfaces.OnClickOutsideListener;
 import com.zpj.utils.ScreenUtils;
 import com.zpj.utils.StatusBarUtils;
@@ -32,15 +33,12 @@ public abstract class PartShadowDialogFragment<T extends PartShadowDialogFragmen
     }
 
     @Override
-    protected void doAttach() {
-//        Log.d(TAG, "screenHeight=" + ScreenUtils.getScreenHeight(context) + " getRootView().getMeasuredHeight()=" + getRootView().getMeasuredHeight());
+    protected DialogAnimator onCreateShadowAnimator(FrameLayout flContainer) {
+        return new ShadowMaskAnimator(getImplView());
+    }
 
-        if (attachView == null)
-            throw new IllegalArgumentException("atView must not be null for PartShadowPopupView！");
-
-        // 指定阴影动画的目标View
-        shadowBgAnimator.targetView = getImplView();
-
+    @Override
+    protected DialogAnimator onCreateDialogAnimator(ViewGroup implView) {
         //1. apply width and height
         int rotation = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) getImplView().getLayoutParams();
@@ -52,25 +50,20 @@ public abstract class PartShadowDialogFragment<T extends PartShadowDialogFragmen
 
         Log.d(TAG, "rotation=" + rotation);
 
-        //水平居中
-//        if(isCenterHorizontal && getPopupImplView() != null){
-//            getPopupImplView().setTranslationX(XPopupUtils.getWindowWidth(getContext())/2f - getPopupContentView().getMeasuredWidth()/2f);
-//        }
-
         //1. 获取atView在屏幕上的位置
         int[] locations = new int[2];
         attachView.getLocationOnScreen(locations);
         Rect rect = new Rect(locations[0], locations[1], locations[0] + attachView.getMeasuredWidth(),
                 locations[1] + attachView.getMeasuredHeight());
         int centerY = rect.top + rect.height() / 2;
-        Log.d(TAG, "centerY=" + centerY + " getImplView().getMeasuredHeight()=" + getImplView().getMeasuredHeight() + " getContentView().getMeasuredHeight()" + getContentView().getMeasuredHeight());
+        Log.d(TAG, "centerY=" + centerY + " getImplView().getMeasuredHeight()=" + getImplView().getMeasuredHeight() + " getContentView().getMeasuredHeight()=" + getContentView().getMeasuredHeight());
 
 //        int offset = ScreenUtils.getScreenHeight(context) - getRootView().getMeasuredHeight();
         int[] rootLocations = new int[2];
         getRootView().getLocationOnScreen(rootLocations);
         int offset = rootLocations[1];
 
-        if ((centerY > getImplView().getMeasuredHeight() || popupPosition == PopupPosition.Top) && popupPosition != PopupPosition.Bottom) {
+        if ((centerY > getImplView().getMeasuredHeight() || dialogPosition == DialogPosition.Top) && dialogPosition != DialogPosition.Bottom) {
             // 说明atView在Window下半部分，PartShadow应该显示在它上方，计算atView之上的高度
             params.height = rect.top - offset;
             params.width = MATCH_PARENT;
@@ -125,26 +118,13 @@ public abstract class PartShadowDialogFragment<T extends PartShadowDialogFragmen
             }
         });
 
-//        post(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//            }
-//        });
 
-        popupContentAnimator = getDialogAnimator((ViewGroup) contentView);
-        if (popupContentAnimator != null) {
-            popupContentAnimator.initAnimator();
-            popupContentAnimator.animateShow();
-        }
-        if (shadowBgAnimator != null) {
-            shadowBgAnimator.initAnimator();
-            shadowBgAnimator.animateShow();
-        }
-        getImplView().setAlpha(1f);
+
+        return new TranslateAnimator(contentView, isShowUp ?
+                DialogAnimation.TranslateFromBottom : DialogAnimation.TranslateFromTop);
     }
 
-//    //让触摸透过
+    //    //让触摸透过
 //    @Override
 //    public boolean onTouchEvent(MotionEvent event) {
 //        if(cancelableInTouchOutside){
@@ -152,11 +132,5 @@ public abstract class PartShadowDialogFragment<T extends PartShadowDialogFragmen
 //        }
 //        return !cancelableInTouchOutside;
 //    }
-
-    @Override
-    protected PopupAnimator getDialogAnimator(ViewGroup contentView) {
-        return new TranslateAnimator(contentView, isShowUp ?
-                PopupAnimation.TranslateFromBottom : PopupAnimation.TranslateFromTop);
-    }
 
 }

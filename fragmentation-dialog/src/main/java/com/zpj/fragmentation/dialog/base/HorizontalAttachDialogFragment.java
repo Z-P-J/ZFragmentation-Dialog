@@ -3,10 +3,10 @@ package com.zpj.fragmentation.dialog.base;
 import android.graphics.Rect;
 import android.view.ViewGroup;
 
-import com.zpj.fragmentation.dialog.animator.PopupAnimator;
+import com.zpj.fragmentation.dialog.animator.DialogAnimator;
 import com.zpj.fragmentation.dialog.animator.ScrollScaleAnimator;
-import com.zpj.fragmentation.dialog.enums.PopupAnimation;
-import com.zpj.fragmentation.dialog.enums.PopupPosition;
+import com.zpj.fragmentation.dialog.enums.DialogAnimation;
+import com.zpj.fragmentation.dialog.enums.DialogPosition;
 import com.zpj.utils.ScreenUtils;
 
 /**
@@ -18,22 +18,8 @@ public abstract class HorizontalAttachDialogFragment<T extends HorizontalAttachD
         extends AttachDialogFragment<T> {
 
     @Override
-    protected PopupAnimator getDialogAnimator(ViewGroup contentView) {
-        ScrollScaleAnimator animator;
-        if (isShowLeftToTarget()) {
-            animator = new ScrollScaleAnimator(getImplView(), PopupAnimation.ScrollAlphaFromRight);
-        } else {
-            animator = new ScrollScaleAnimator(getImplView(), PopupAnimation.ScrollAlphaFromLeft);
-        }
-        animator.isOnlyScaleX = true;
-        return animator;
-    }
+    protected DialogAnimator onCreateDialogAnimator(ViewGroup contentView) {
 
-    /**
-     * 执行附着逻辑
-     */
-    @Override
-    protected void doAttach() {
         float translationX = 0, translationY = 0;
         int w = getImplView().getMeasuredWidth();
         int h = getImplView().getMeasuredHeight();
@@ -62,11 +48,17 @@ public abstract class HorizontalAttachDialogFragment<T extends HorizontalAttachD
         }
         getImplView().setTranslationX(translationX);
         getImplView().setTranslationY(translationY);
+
+        ScrollScaleAnimator animator = new ScrollScaleAnimator(getImplView(),
+                isShowLeftToTarget() ? DialogAnimation.ScrollAlphaFromRight
+                        : DialogAnimation.ScrollAlphaFromLeft);
+        animator.isOnlyScaleX = true;
+        return animator;
     }
 
     private boolean isShowLeftToTarget() {
-        return (isShowLeft || popupPosition == PopupPosition.Left)
-                && popupPosition != PopupPosition.Right;
+        return (isShowLeft || dialogPosition == DialogPosition.Left)
+                && dialogPosition != DialogPosition.Right;
     }
 
 }

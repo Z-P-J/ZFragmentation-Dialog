@@ -4,22 +4,18 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 
-import com.zpj.fragmentation.SupportFragment;
 import com.zpj.fragmentation.dialog.R;
-import com.zpj.fragmentation.dialog.animator.PopupAnimator;
+import com.zpj.fragmentation.dialog.animator.DialogAnimator;
 import com.zpj.fragmentation.dialog.animator.ScrollScaleAnimator;
-import com.zpj.fragmentation.dialog.enums.PopupAnimation;
-import com.zpj.fragmentation.dialog.enums.PopupPosition;
+import com.zpj.fragmentation.dialog.enums.DialogAnimation;
+import com.zpj.fragmentation.dialog.enums.DialogPosition;
 import com.zpj.fragmentation.dialog.widget.PartShadowContainer;
 import com.zpj.utils.ScreenUtils;
 
@@ -39,7 +35,7 @@ public abstract class AttachDialogFragment<T extends AttachDialogFragment<T>> ex
     protected View attachView;
     protected PointF touchPoint = null;
 
-    protected PopupPosition popupPosition = null;
+    protected DialogPosition dialogPosition = null;
 
     protected AtViewGravity atViewGravity = AtViewGravity.TOP;
 
@@ -92,24 +88,8 @@ public abstract class AttachDialogFragment<T extends AttachDialogFragment<T>> ex
         view.setClickable(true);
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        contentView
-                .getViewTreeObserver()
-                .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                    @Override
-                    public boolean onPreDraw() {
-                        contentView.getViewTreeObserver().removeOnPreDrawListener(this);
-                        doAttach();
-                        return false;
-                    }
-                });
-    }
-
     public boolean isShowUp;
     boolean isShowLeft;
-    protected int bgDrawableMargin = 6;
 
 
     /**
@@ -120,13 +100,13 @@ public abstract class AttachDialogFragment<T extends AttachDialogFragment<T>> ex
     float maxY = 0;
     float maxX = 0; // 显示在右边时候的最大值
 
-    @Override
-    public void doShowAnimation() {
-
+    protected boolean isShowUpToTarget() {
+        return (isShowUp || dialogPosition == DialogPosition.Top)
+                && dialogPosition != DialogPosition.Bottom;
     }
 
-    protected void doAttach() {
-//        int offset = ScreenUtils.getScreenHeight(context) - getRootView().getMeasuredHeight();
+    @Override
+    protected DialogAnimator onCreateDialogAnimator(ViewGroup contentView) {
         int[] rootLocations = new int[2];
         getRootView().getLocationOnScreen(rootLocations);
         int offset = rootLocations[1];
@@ -135,7 +115,7 @@ public abstract class AttachDialogFragment<T extends AttachDialogFragment<T>> ex
         maxY = windowHeight;
         int width = getImplView().getMeasuredWidth();
         int height = getImplView().getMeasuredHeight();
-        Log.d(TAG, "width=" + width + " height=" + height);
+        Log.d(TAG, "width=" + width + " height=" + height + " windowWidth=" + windowWidth + " windowHeight=" + windowHeight);
 
         ViewGroup.LayoutParams params = getImplView().getLayoutParams();
         if (getMaxHeight() > 0 && getMaxHeight() < height) {
@@ -212,14 +192,6 @@ public abstract class AttachDialogFragment<T extends AttachDialogFragment<T>> ex
 
             getImplView().setTranslationX(translationX);
             getImplView().setTranslationY(translationY);
-
-            popupContentAnimator = getDialogAnimator((ViewGroup) getImplView());
-            if (popupContentAnimator != null) {
-                popupContentAnimator.initAnimator();
-                popupContentAnimator.animateShow();
-            }
-            getImplView().setAlpha(1f);
-
         } else {
             // 依附于指定View
             //1. 获取atView在屏幕上的位置
@@ -285,57 +257,28 @@ public abstract class AttachDialogFragment<T extends AttachDialogFragment<T>> ex
 
             translationY -= offset;
 
-//                    translationY -= ScreenUtils.getStatusBarHeight(context);
-
-//                    if (getActivity() != null && (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-//                            & getActivity().getWindow().getAttributes().flags)
-//                            == WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS) {
-//
-//                    } else {
-//                        translationY -= ScreenUtils.getStatusBarHeight(context);
-//                    }
-
-            Log.d(TAG, "translationX=" + translationX + " translationY=" + translationY);
-
-
             getImplView().setTranslationX(translationX);
             getImplView().setTranslationY(translationY);
-
-
-            popupContentAnimator = getDialogAnimator((ViewGroup) getImplView());
-            if (popupContentAnimator != null) {
-                popupContentAnimator.initAnimator();
-                popupContentAnimator.animateShow();
-            }
-            getImplView().setAlpha(1f);
-
         }
-    }
 
-    protected boolean isShowUpToTarget() {
-        return (isShowUp || popupPosition == PopupPosition.Top)
-                && popupPosition != PopupPosition.Bottom;
+
+
+        DialogAnimation animation;
+        if (isShowUpToTarget()) {
+            animation = isShowLeft ? DialogAnimation.ScrollAlphaFromLeftBottom
+                    : DialogAnimation.ScrollAlphaFromRightBottom;
+        } else {
+            // 在下方展示
+            animation = isShowLeft ? DialogAnimation.ScrollAlphaFromLeftTop
+                    : DialogAnimation.ScrollAlphaFromRightTop;
+        }
+        return new ScrollScaleAnimator(getImplView(), animation);
     }
 
     @Override
-    protected PopupAnimator getDialogAnimator(ViewGroup contentView) {
-        PopupAnimator animator;
-        if (isShowUpToTarget()) {
-            // 在上方展示
-            if (isShowLeft) {
-                animator = new ScrollScaleAnimator(getImplView(), PopupAnimation.ScrollAlphaFromLeftBottom);
-            } else {
-                animator = new ScrollScaleAnimator(getImplView(), PopupAnimation.ScrollAlphaFromRightBottom);
-            }
-        } else {
-            // 在下方展示
-            if (isShowLeft) {
-                animator = new ScrollScaleAnimator(getImplView(), PopupAnimation.ScrollAlphaFromLeftTop);
-            } else {
-                animator = new ScrollScaleAnimator(getImplView(), PopupAnimation.ScrollAlphaFromRightTop);
-            }
-        }
-        return animator;
+    public void doShowAnimation() {
+        super.doShowAnimation();
+        getImplView().setAlpha(1f);
     }
 
     public View getContentView() {
@@ -370,7 +313,7 @@ public abstract class AttachDialogFragment<T extends AttachDialogFragment<T>> ex
     }
 
     public T setTouchPoint(float x, float y) {
-        this.touchPoint = new PointF(x, y);;
+        this.touchPoint = new PointF(x, y);
         return self();
     }
 
@@ -379,8 +322,8 @@ public abstract class AttachDialogFragment<T extends AttachDialogFragment<T>> ex
         return self();
     }
 
-    public T setPopupPosition(PopupPosition popupPosition) {
-        this.popupPosition = popupPosition;
+    public T setDialogPosition(DialogPosition dialogPosition) {
+        this.dialogPosition = dialogPosition;
         return self();
     }
 

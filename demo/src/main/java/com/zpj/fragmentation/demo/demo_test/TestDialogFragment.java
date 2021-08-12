@@ -8,7 +8,7 @@ import android.widget.Toast;
 import com.zpj.fragmentation.demo.R;
 import com.zpj.fragmentation.dialog.base.CardDialogFragment;
 
-public class TestDialogFragment extends CardDialogFragment<TestDialogFragment> {
+public class TestDialogFragment extends CardDialogFragment {
 
     @Override
     protected int getContentLayoutId() {
