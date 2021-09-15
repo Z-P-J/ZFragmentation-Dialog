@@ -1,5 +1,6 @@
 package com.zpj.fragmentation.demo.demo_test;
 
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -497,6 +498,8 @@ public class MainFragment extends SimpleFragment {
     private void showArrowMenuDialogFragment(int o, View view) {
         new ArrowMenuDialogFragment()
                 .setOptionMenus("详细信息", "分享", "卸载", "打开")
+//                .setShadowColor(Color.BLACK)
+                .setShadowRadius(8)
                 .setOrientation(o)
                 .setOnItemClickListener((position, menu) -> {
                     Toast.makeText(context, menu.getTitle(), Toast.LENGTH_SHORT).show();

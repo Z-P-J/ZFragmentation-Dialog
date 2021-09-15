@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.OvershootInterpolator;
 
+import com.zpj.fragmentation.dialog.base.BaseDialogFragment;
 import com.zpj.fragmentation.dialog.enums.DialogAnimation;
 
 /**
@@ -89,7 +90,7 @@ public class ScaleAlphaAnimator extends AbsDialogAnimator<ViewPropertyAnimator, 
     }
 
     @Override
-    public ViewPropertyAnimator onCreateShowAnimator() {
+    public ViewPropertyAnimator onCreateShowAnimator(BaseDialogFragment<?> fragment) {
         return targetView.animate()
                 .scaleX(1f)
                 .scaleY(1f)
@@ -98,7 +99,7 @@ public class ScaleAlphaAnimator extends AbsDialogAnimator<ViewPropertyAnimator, 
     }
 
     @Override
-    public ViewPropertyAnimator onCreateDismissAnimator() {
+    public ViewPropertyAnimator onCreateDismissAnimator(BaseDialogFragment<?> fragment) {
         return targetView.animate()
                 .scaleX(0f)
                 .scaleY(0f)

@@ -106,29 +106,28 @@ public abstract class BaseDialogFragment<T extends BaseDialogFragment<T>> extend
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-//        getRootView().getViewTreeObserver()
-//                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//                    @Override
-//                    public void onGlobalLayout() {
-//                        getRootView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
-//                        doShowAnimation();
-//                    }
-//                });
-
-
         getRootView()
                 .getViewTreeObserver()
                 .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                     @Override
                     public boolean onPreDraw() {
                         getRootView().getViewTreeObserver().removeOnPreDrawListener(this);
-                        mShadowAnimator = onCreateShadowAnimator(rootView);
+                        if (preFragment != null) {
+                            ISupportFragment fragment = preFragment.get();
+                            if (fragment instanceof SupportFragment && fragment == getTopFragment()) {
+                                ((SupportFragment) fragment).onPause();
+                            }
+                        }
+                        if (mShadowAnimator == null) {
+                            mShadowAnimator = onCreateShadowAnimator(rootView);
+                        }
                         if (mShadowAnimator != null) {
                             mShadowAnimator.setShowDuration(getShowAnimDuration());
                             mShadowAnimator.setDismissDuration(getDismissAnimDuration());
                         }
-                        mDialogAnimator = onCreateDialogAnimator(implView);
+                        if (mDialogAnimator == null) {
+                            mDialogAnimator = onCreateDialogAnimator(implView);
+                        }
                         if (mDialogAnimator != null) {
                             mDialogAnimator.setShowDuration(getShowAnimDuration());
                             mDialogAnimator.setDismissDuration(getDismissAnimDuration());
@@ -140,10 +139,16 @@ public abstract class BaseDialogFragment<T extends BaseDialogFragment<T>> extend
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
     public void onDestroy() {
         if (preFragment != null) {
             ISupportFragment fragment = preFragment.get();
-            if (fragment != null && fragment == getTopFragment()) {
+            if (fragment instanceof SupportFragment && fragment == getTopFragment()) {
+                ((SupportFragment) fragment).onResume();
                 fragment.onSupportVisible();
                 preFragment.clear();
             }
@@ -151,6 +156,11 @@ public abstract class BaseDialogFragment<T extends BaseDialogFragment<T>> extend
         preFragment = null;
         this.isDismissing = false;
         super.onDestroy();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 
     @Override
@@ -198,26 +208,29 @@ public abstract class BaseDialogFragment<T extends BaseDialogFragment<T>> extend
         return self();
     }
 
+    public void setDialogAnimator(DialogAnimator mDialogAnimator) {
+        this.mDialogAnimator = mDialogAnimator;
+    }
+
     public void doShowAnimation() {
         if (mDialogAnimator != null) {
-            mDialogAnimator.setShowDuration(getShowAnimDuration());
-            mDialogAnimator.animateToShow();
+//            mDialogAnimator.setShowDuration(getShowAnimDuration());
+            mDialogAnimator.animateToShow(this);
         }
 
         if (mShadowAnimator != null) {
-            mShadowAnimator.setShowDuration(getShowAnimDuration());
-            mShadowAnimator.animateToShow();
+//            mShadowAnimator.setShowDuration(getShowAnimDuration());
+            mShadowAnimator.animateToShow(this);
         }
     }
 
     public void doDismissAnimation() {
         if (mDialogAnimator != null) {
-            mDialogAnimator.setDismissDuration(getDismissAnimDuration());
-            mDialogAnimator.animateToDismiss();
+//            mDialogAnimator.setDismissDuration(getDismissAnimDuration());
+            mDialogAnimator.animateToDismiss(this);
         }
         if (mShadowAnimator != null) {
-            mShadowAnimator.setDismissDuration(getDismissAnimDuration());
-            mShadowAnimator.animateToDismiss();
+            mShadowAnimator.animateToDismiss(this);
         }
     }
 

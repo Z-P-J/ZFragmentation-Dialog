@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewPropertyAnimator;
 
 import com.zpj.fragmentation.dialog.AbstractDialogFragment;
+import com.zpj.fragmentation.dialog.base.BaseDialogFragment;
 import com.zpj.fragmentation.dialog.enums.DialogAnimation;
 
 public abstract class AbsDialogAnimator<S, T> implements DialogAnimator {
@@ -15,9 +16,10 @@ public abstract class AbsDialogAnimator<S, T> implements DialogAnimator {
     protected long mShowDuration = 360;
     protected long mDismissDuration = 360;
 
-    public DialogAnimation dialogAnimation;
+    private S mShowAnimator;
+    private T mDismissAnimator;
 
-//    protected Listener mListener;
+    public DialogAnimation dialogAnimation;
 
     public AbsDialogAnimator(View target){
         this(target, null);
@@ -27,11 +29,6 @@ public abstract class AbsDialogAnimator<S, T> implements DialogAnimator {
         this.targetView = target;
         this.dialogAnimation = dialogAnimation;
     }
-
-//    @Override
-//    public void setListener(Listener listener) {
-//        this.mListener = listener;
-//    }
 
     @Override
     public void setShowDuration(long showAnimDuration) {
@@ -43,25 +40,27 @@ public abstract class AbsDialogAnimator<S, T> implements DialogAnimator {
         this.mDismissDuration = dismissAnimDuration;
     }
 
+    @Override
     public long getShowDuration() {
         return mShowDuration;
     }
 
+    @Override
     public long getDismissDuration() {
         return mDismissDuration;
     }
 
 
     @Override
-    public void animateToShow() {
-        S animator = onCreateShowAnimator();
-        startAnimator(animator, mShowDuration, true);
+    public void animateToShow(BaseDialogFragment<?> fragment) {
+        mShowAnimator = onCreateShowAnimator(fragment);
+        startAnimator(mShowAnimator, fragment.getShowAnimDuration(), true);
     }
 
     @Override
-    public void animateToDismiss() {
-        T animator = onCreateDismissAnimator();
-        startAnimator(animator, mDismissDuration, false);
+    public void animateToDismiss(BaseDialogFragment<?> fragment) {
+        mDismissAnimator = onCreateDismissAnimator(fragment);
+        startAnimator(mDismissAnimator, fragment.getDismissAnimDuration(), false);
     }
 
     protected void startAnimator(Object animator, long duration, boolean isShow) {
@@ -113,7 +112,7 @@ public abstract class AbsDialogAnimator<S, T> implements DialogAnimator {
 //        };
 //    }
 
-    public abstract S onCreateShowAnimator();
-    public abstract T onCreateDismissAnimator();
+    public abstract S onCreateShowAnimator(BaseDialogFragment<?> fragment);
+    public abstract T onCreateDismissAnimator(BaseDialogFragment<?> fragment);
 
 }

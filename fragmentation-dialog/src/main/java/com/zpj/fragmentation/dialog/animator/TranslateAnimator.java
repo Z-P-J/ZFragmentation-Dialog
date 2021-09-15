@@ -4,6 +4,7 @@ import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 
+import com.zpj.fragmentation.dialog.base.BaseDialogFragment;
 import com.zpj.fragmentation.dialog.enums.DialogAnimation;
 
 /**
@@ -67,7 +68,7 @@ public class TranslateAnimator extends AbsDialogAnimator<ViewPropertyAnimator, V
     }
 
     @Override
-    public ViewPropertyAnimator onCreateShowAnimator() {
+    public ViewPropertyAnimator onCreateShowAnimator(BaseDialogFragment<?> fragment) {
         return targetView.animate()
                 .translationX(initTranslationX)
                 .translationY(initTranslationY)
@@ -75,7 +76,7 @@ public class TranslateAnimator extends AbsDialogAnimator<ViewPropertyAnimator, V
     }
 
     @Override
-    public ViewPropertyAnimator onCreateDismissAnimator() {
+    public ViewPropertyAnimator onCreateDismissAnimator(BaseDialogFragment<?> fragment) {
         //执行消失动画的时候，宽高可能改变了，所以需要修正动画的起始值
         switch (dialogAnimation) {
             case TranslateFromLeft:

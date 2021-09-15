@@ -3,7 +3,7 @@ A powerful library that manage DialogFragment for Fragmentation.
 
 ## 如何使用
 
-[![](https://jitpack.io/v/Z-P-J/Fragmentation-Dialog.svg)](https://jitpack.io/#Z-P-J/Fragmentation-Dialog)
+[![](https://jitpack.io/v/Z-P-J/ZFragmentation-Dialog.svg)](https://jitpack.io/#Z-P-J/ZFragmentation-Dialog)
 **1. 项目下app的build.gradle中依赖：**
 
 ````gradle

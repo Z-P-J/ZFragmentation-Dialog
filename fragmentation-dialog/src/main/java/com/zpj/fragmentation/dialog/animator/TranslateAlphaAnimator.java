@@ -4,6 +4,7 @@ import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 
+import com.zpj.fragmentation.dialog.base.BaseDialogFragment;
 import com.zpj.fragmentation.dialog.enums.DialogAnimation;
 
 /**
@@ -60,7 +61,7 @@ public class TranslateAlphaAnimator extends AbsDialogAnimator<ViewPropertyAnimat
     }
 
     @Override
-    public ViewPropertyAnimator onCreateShowAnimator() {
+    public ViewPropertyAnimator onCreateShowAnimator(BaseDialogFragment<?> fragment) {
         return targetView.animate()
                 .translationX(defTranslationX)
                 .translationY(defTranslationY)
@@ -69,7 +70,7 @@ public class TranslateAlphaAnimator extends AbsDialogAnimator<ViewPropertyAnimat
     }
 
     @Override
-    public ViewPropertyAnimator onCreateDismissAnimator() {
+    public ViewPropertyAnimator onCreateDismissAnimator(BaseDialogFragment<?> fragment) {
         return targetView.animate()
                 .translationX(startTranslationX)
                 .translationY(startTranslationY)

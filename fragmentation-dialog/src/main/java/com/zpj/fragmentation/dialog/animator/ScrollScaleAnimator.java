@@ -7,6 +7,7 @@ import android.animation.ValueAnimator;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.View;
 
+import com.zpj.fragmentation.dialog.base.BaseDialogFragment;
 import com.zpj.fragmentation.dialog.enums.DialogAnimation;
 
 /**
@@ -111,7 +112,7 @@ public class ScrollScaleAnimator extends AbsDialogAnimator<Animator, Animator> {
     }
 
     @Override
-    public Animator onCreateShowAnimator() {
+    public Animator onCreateShowAnimator(BaseDialogFragment<?> fragment) {
         ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -135,7 +136,7 @@ public class ScrollScaleAnimator extends AbsDialogAnimator<Animator, Animator> {
     }
 
     @Override
-    public Animator onCreateDismissAnimator() {
+    public Animator onCreateDismissAnimator(BaseDialogFragment<?> fragment) {
         ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
