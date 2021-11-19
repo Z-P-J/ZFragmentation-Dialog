@@ -94,18 +94,16 @@ public abstract class ArrowDialogFragment<T extends ArrowDialogFragment<T>> exte
 
     @Override
     public void doShowAnimation() {
+        generateAnimation(attachView, touchPoint);
         super.doShowAnimation();
-        show(attachView, null, touchPoint);
     }
 
-    private void show(View anchor, RectF frame, PointF origin) {
+    private void generateAnimation(View anchor, PointF origin) {
 
         if (origin == null) {
             origin = new PointF(-1, -1);
         }
-        if (frame == null) {
-            frame = new RectF();
-        }
+        RectF frame = new RectF();
 
 
         int[] location = reviseFrameAndOrigin(anchor, frame, origin);
@@ -193,7 +191,8 @@ public abstract class ArrowDialogFragment<T extends ArrowDialogFragment<T>> exte
         getImplView().setTranslationY(y);
         getImplView().setAlpha(1f);
         mDialogAnimator = new ScaleAlphaAnimator(getImplView(), pivotX, pivotY);
-        mDialogAnimator.animateToShow(this);
+        mDialogAnimator.setShowDuration(getShowAnimDuration());
+        mDialogAnimator.setDismissDuration(getDismissAnimDuration());
     }
 
     public int[] reviseFrameAndOrigin(View anchor, RectF frame, PointF origin) {

@@ -43,7 +43,7 @@ dependencies {
     implementation 'com.github.Z-P-J:ZFragmentation:1.0.1'
     implementation 'com.github.Z-P-J:ZUtils:1.0.0'
 
-    api 'com.github.Z-P-J:ZRecyclerView:1.0.0'
-    api 'com.github.Z-P-J:SmoothCheckBox:1.0.0'
+    api 'com.github.Z-P-J:ZRecyclerView:1.0.1'
+    api 'com.github.Z-P-J:ZCheckBox:1.0.0'
 
 }

@@ -14,7 +14,7 @@ import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 import com.zpj.recyclerview.EasyRecyclerView;
 import com.zpj.recyclerview.EasyViewHolder;
 import com.zpj.recyclerview.IEasy;
-import com.zpj.widget.checkbox.SmoothCheckBox;
+import com.zpj.widget.checkbox.ZCheckBox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class SelectDialogFragment<T, S extends SelectDialogFragment<T, S>> exten
     private IDialog.ViewBinder<TextView, T> titleCallback;
     private IDialog.ViewBinder<TextView, T> subtitleCallback;
 
-    private SmoothCheckBox selectAllCheckBox;
+    private ZCheckBox selectAllCheckBox;
 
     @Override
     protected final int getItemRes() {
@@ -112,7 +112,7 @@ public class SelectDialogFragment<T, S extends SelectDialogFragment<T, S>> exten
         titleView.setTextColor(DialogThemeUtils.getMajorTextColor(context));
         TextView contentView = holder.getView(R.id.content_view);
         contentView.setTextColor(DialogThemeUtils.getNormalTextColor(context));
-        final SmoothCheckBox checkBox = holder.getView(R.id.check_box);
+        final ZCheckBox checkBox = holder.getView(R.id.check_box);
         checkBox.setVisibility(isSelectMode ? View.VISIBLE : View.GONE);
         checkBox.setCheckedColor(DialogThemeUtils.getColorPrimary(context));
         checkBox.setChecked(selectedList.contains(position), false);
