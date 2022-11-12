@@ -3,24 +3,23 @@ package com.zpj.fragmentation.dialog.impl;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.lihang.ShadowLayout;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.zpj.fragmentation.dialog.DialogAnimator;
 import com.zpj.fragmentation.dialog.IDialog;
 import com.zpj.fragmentation.dialog.R;
-import com.zpj.fragmentation.dialog.DialogAnimator;
 import com.zpj.fragmentation.dialog.base.AttachDialogFragment;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 import com.zpj.recyclerview.EasyRecycler;
 import com.zpj.utils.ScreenUtils;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -68,19 +67,9 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment<AttachList
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
         int color = DialogThemeUtils.getDialogBackgroundColor(context);
-        ShadowLayout shadowLayout = findViewById(R.id.shadow_layout);
-        shadowLayout.setmShadowColor(Color.DKGRAY);
-        shadowLayout.setmCornerRadius((int) cornerRadius);
         CardView cardView = findViewById(R.id.cv_container);
         cardView.setRadius(cornerRadius);
-        try {
-            Field mBackGroundColor = ShadowLayout.class.getDeclaredField("mBackGroundColor");
-            mBackGroundColor.setAccessible(true);
-            mBackGroundColor.set(shadowLayout, color);
-            shadowLayout.setSelected(false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        cardView.setCardBackgroundColor(color);
 
         if (textColor == 0) {
             textColor = DialogThemeUtils.getMajorTextColor(context);

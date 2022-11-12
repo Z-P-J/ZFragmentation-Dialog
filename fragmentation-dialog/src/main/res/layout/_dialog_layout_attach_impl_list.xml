@@ -1,48 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.lihang.ShadowLayout
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/shadow_layout"
+    android:id="@+id/cv_container"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:hl_shadowLimit="8dp"
-    app:hl_cornerRadius="8dp"
-    app:hl_shadowColor="#80aaaaaa"
-    app:hl_isShowShadow="true"
+    app:cardCornerRadius="8dp"
+    app:cardUseCompatPadding="true"
     >
 
-
-
-<!--    app:cardBackgroundColor="@android:color/white"-->
-<!--    app:cornerRadius="8dp"-->
-<!--    app:shadowFluidShape="adsorption"-->
-<!--    app:shadowColor="#bdbdbd"-->
-<!--    app:shadowStartAlpha="120"-->
-<!--    app:shadowSize="4dp"-->
-
-<!--    app:cornerRadius="8dp"-->
-<!--    app:shadowFluidShape="adsorption"-->
-<!--    app:shadowColor="#bdbdbd"-->
-<!--    app:shadowStartAlpha="10"-->
-<!--    app:shadowSize="4dp"-->
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cv_container"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/_dialog_recycler_View"
+        android:overScrollMode="never"
+        android:scrollbars="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:cardCornerRadius="8dp"
-        app:cardUseCompatPadding="false"
-        app:cardElevation="0dp"
-        app:cardBackgroundColor="@color/transparent"
-        >
+        android:layout_height="match_parent" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/_dialog_recycler_View"
-            android:overScrollMode="never"
-            android:scrollbars="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </androidx.cardview.widget.CardView>
-
-</com.lihang.ShadowLayout>
+</androidx.cardview.widget.CardView>
