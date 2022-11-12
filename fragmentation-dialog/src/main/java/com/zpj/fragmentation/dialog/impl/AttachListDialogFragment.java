@@ -14,10 +14,10 @@ import android.widget.TextView;
 import com.lihang.ShadowLayout;
 import com.zpj.fragmentation.dialog.IDialog;
 import com.zpj.fragmentation.dialog.R;
-import com.zpj.fragmentation.dialog.animator.DialogAnimator;
+import com.zpj.fragmentation.dialog.DialogAnimator;
 import com.zpj.fragmentation.dialog.base.AttachDialogFragment;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
-import com.zpj.recyclerview.EasyRecyclerView;
+import com.zpj.recyclerview.EasyRecycler;
 import com.zpj.utils.ScreenUtils;
 
 import java.lang.reflect.Field;
@@ -38,18 +38,16 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment<AttachList
     private IDialog.ViewBinder<ImageView, T> iconCallback;
     private IDialog.ViewBinder<TextView, T> titleCallback;
 
-//    private int minWidth;
-
-
     private final List<T> items = new ArrayList<>();
     private final List<Integer> iconIds = new ArrayList<>();
 
     public AttachListDialogFragment() {
-        cornerRadius = ScreenUtils.dp2px(8);
+        cornerRadius = ScreenUtils.dp2px(16);
+        mMinWidth = (int) (ScreenUtils.getScreenWidth() / 2.2f);
     }
 
     @Override
-    protected int getContentLayoutId() {
+    protected int getImplLayoutId() {
         return R.layout._dialog_layout_attach_impl_list;
     }
 
@@ -69,10 +67,6 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment<AttachList
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
-        if (maxWidth <= 0) {
-//            minWidth = ScreenUtils.getScreenWidth(context) / 2;
-            maxWidth = ScreenUtils.dp2pxInt(180);
-        }
         int color = DialogThemeUtils.getDialogBackgroundColor(context);
         ShadowLayout shadowLayout = findViewById(R.id.shadow_layout);
         shadowLayout.setmShadowColor(Color.DKGRAY);
@@ -92,13 +86,23 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment<AttachList
             textColor = DialogThemeUtils.getMajorTextColor(context);
         }
 
+        int dp12 = ScreenUtils.dp2pxInt(12);
         recyclerView = findViewById(R.id._dialog_recycler_View);
-        recyclerView.setMinimumWidth(maxWidth);
-        EasyRecyclerView<T> easyRecyclerView = new EasyRecyclerView<>(recyclerView);
-        easyRecyclerView.setData(items)
-                .setItemRes(bindItemLayoutId == 0 ? R.layout._dialog_item_text : bindItemLayoutId)
+        EasyRecycler<T> recycler = new EasyRecycler<>(recyclerView, items);
+        recycler.setItemRes(bindItemLayoutId == 0 ? R.layout._dialog_item_text : bindItemLayoutId)
                 .onBindViewHolder((holder, list, position, payloads) -> {
 //                    holder.getItemView().setMinimumWidth(maxWidth);
+
+                    if (recycler.getItemCount() == 1) {
+                        holder.setPadding(dp12, (int) (dp12 * 1.5f), dp12, (int) (dp12 * 1.5f));
+                    } else if (position == 0) {
+                        holder.setPadding(dp12, (int) (dp12 * 1.5f), dp12, dp12);
+                    } else if (position == items.size() - 1) {
+                        holder.setPadding(dp12, dp12, dp12, (int) (dp12 * 1.5f));
+                    } else {
+                        holder.setPadding(dp12, dp12, dp12, dp12);
+                    }
+
                     TextView tvText = holder.getView(R.id.tv_text);
                     tvText.setTextColor(textColor);
 
@@ -125,7 +129,7 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment<AttachList
                         iconCallback.onBindView(ivImage, list.get(position), position);
                     }
                     if (titleCallback == null) {
-                        tvText.setText(list.get(position).toString());
+                        tvText.setText(String.valueOf(list.get(position)));
                     } else {
                         titleCallback.onBindView(tvText, list.get(position), position);
                     }
@@ -138,11 +142,6 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment<AttachList
                 })
                 .build();
     }
-
-//    public AttachListDialogFragment<T> setMinWidth(int minWidth) {
-//        this.minWidth = minWidth;
-//        return this;
-//    }
 
     /**
      * 传入自定义的布局，对布局中的id有要求
@@ -165,16 +164,6 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment<AttachList
         this.bindItemLayoutId = itemLayoutId;
         return this;
     }
-
-//    public void show(View atView) {
-//        popupInfo.atView = atView;
-//        show();
-//    }
-//
-//    public void show(float x, float y) {
-//        popupInfo.touchPoint = new PointF(x, y);
-//        show();
-//    }
 
     public AttachListDialogFragment<T> setCornerRadius(float cornerRadius) {
         this.cornerRadius = cornerRadius;
@@ -201,17 +190,21 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment<AttachList
         return this;
     }
 
+    public AttachListDialogFragment<T> setItems(T... items) {
+        return setItems(Arrays.asList(items));
+    }
+
     public AttachListDialogFragment<T> addItems(List<T> items) {
         this.items.addAll(items);
         return this;
     }
 
-    public AttachListDialogFragment<T> addItems(T...items) {
+    public AttachListDialogFragment<T> addItems(T... items) {
         this.items.addAll(Arrays.asList(items));
         return this;
     }
 
-    public AttachListDialogFragment<T> addItemsIf(boolean flag, T...items) {
+    public AttachListDialogFragment<T> addItemsIf(boolean flag, T... items) {
         if (flag) {
             this.items.addAll(Arrays.asList(items));
         }
@@ -241,14 +234,14 @@ public class AttachListDialogFragment<T> extends AttachDialogFragment<AttachList
         return this;
     }
 
-    public AttachListDialogFragment<T> addIconIds(Integer...ids) {
+    public AttachListDialogFragment<T> addIconIds(Integer... ids) {
         this.iconIds.addAll(Arrays.asList(ids));
         return this;
     }
 
     public AttachListDialogFragment<T> setOffsetXAndY(int offsetX, int offsetY) {
-        this.defaultOffsetX += offsetX;
-        this.defaultOffsetY += offsetY;
+        this.mOffsetX += offsetX;
+        this.mOffsetY += offsetY;
         return this;
     }
 

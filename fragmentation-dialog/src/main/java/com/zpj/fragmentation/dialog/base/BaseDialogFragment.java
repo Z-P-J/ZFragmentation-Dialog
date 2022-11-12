@@ -2,6 +2,7 @@ package com.zpj.fragmentation.dialog.base;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,38 +10,30 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 
-import com.zpj.fragmentation.ISupportFragment;
 import com.zpj.fragmentation.SupportActivity;
 import com.zpj.fragmentation.SupportFragment;
 import com.zpj.fragmentation.dialog.AbstractDialogFragment;
 import com.zpj.fragmentation.dialog.IDialog;
 import com.zpj.fragmentation.dialog.R;
-import com.zpj.fragmentation.dialog.animator.DialogAnimator;
+import com.zpj.fragmentation.dialog.DialogAnimator;
 import com.zpj.fragmentation.dialog.animator.ShadowMaskAnimator;
 import com.zpj.utils.ContextUtils;
 import com.zpj.utils.ScreenUtils;
-
-import java.lang.ref.WeakReference;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public abstract class BaseDialogFragment<T extends BaseDialogFragment<T>> extends AbstractDialogFragment {
 
-    protected DialogAnimator mDialogAnimator;
     protected DialogAnimator mShadowAnimator;
 
-    private FrameLayout rootView;
-    private ViewGroup implView;
-
-    protected boolean isDismissing;
+    protected FrameLayout rootView;
+    protected ViewGroup implView;
 
     protected boolean interceptTouch = true;
     protected boolean cancelable = true;
@@ -52,9 +45,10 @@ public abstract class BaseDialogFragment<T extends BaseDialogFragment<T>> extend
     protected int maxHeight = WRAP_CONTENT;
     protected int marginStart, marginTop, marginEnd, marginBottom;
 
-    protected IDialog.OnDismissListener onDismissListener;
+    protected IDialog.OnDismissListener<T> onDismissListener;
+    protected IDialog.OnCancelListener<T> onCancelListener;
 
-    private WeakReference<ISupportFragment> preFragment;
+//    private WeakReference<ISupportFragment> preFragment;
 
     protected Drawable bgDrawable;
 
@@ -65,6 +59,11 @@ public abstract class BaseDialogFragment<T extends BaseDialogFragment<T>> extend
 
     protected abstract int getImplLayoutId();
 
+    @Override
+    protected DialogAnimator onCreateDialogAnimator() {
+        return onCreateDialogAnimator(implView);
+    }
+
     protected abstract DialogAnimator onCreateDialogAnimator(ViewGroup contentView);
 
     protected DialogAnimator onCreateShadowAnimator(FrameLayout flContainer) {
@@ -73,7 +72,7 @@ public abstract class BaseDialogFragment<T extends BaseDialogFragment<T>> extend
 
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
-        preFragment = new WeakReference<>(getPreFragment());
+//        preFragment = new WeakReference<>(getPreFragment());
         FrameLayout flContainer = findViewById(R.id._dialog_fl_container);
         this.rootView = flContainer;
 
@@ -106,36 +105,6 @@ public abstract class BaseDialogFragment<T extends BaseDialogFragment<T>> extend
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getRootView()
-                .getViewTreeObserver()
-                .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                    @Override
-                    public boolean onPreDraw() {
-                        getRootView().getViewTreeObserver().removeOnPreDrawListener(this);
-                        if (preFragment != null) {
-                            ISupportFragment fragment = preFragment.get();
-                            if (fragment instanceof SupportFragment && fragment == getTopFragment()) {
-                                ((SupportFragment) fragment).onPause();
-                            }
-                        }
-                        if (mShadowAnimator == null) {
-                            mShadowAnimator = onCreateShadowAnimator(rootView);
-                        }
-                        if (mShadowAnimator != null) {
-                            mShadowAnimator.setShowDuration(getShowAnimDuration());
-                            mShadowAnimator.setDismissDuration(getDismissAnimDuration());
-                        }
-                        if (mDialogAnimator == null) {
-                            mDialogAnimator = onCreateDialogAnimator(implView);
-                        }
-                        if (mDialogAnimator != null) {
-                            mDialogAnimator.setShowDuration(getShowAnimDuration());
-                            mDialogAnimator.setDismissDuration(getDismissAnimDuration());
-                        }
-                        doShowAnimation();
-                        return false;
-                    }
-                });
     }
 
     @Override
@@ -145,16 +114,6 @@ public abstract class BaseDialogFragment<T extends BaseDialogFragment<T>> extend
 
     @Override
     public void onDestroy() {
-        if (preFragment != null) {
-            ISupportFragment fragment = preFragment.get();
-            if (fragment instanceof SupportFragment && fragment == getTopFragment()) {
-                ((SupportFragment) fragment).onResume();
-                fragment.onSupportVisible();
-                preFragment.clear();
-            }
-        }
-        preFragment = null;
-        this.isDismissing = false;
         super.onDestroy();
     }
 
@@ -173,7 +132,7 @@ public abstract class BaseDialogFragment<T extends BaseDialogFragment<T>> extend
         if (!cancelable) {
             return;
         }
-        dismiss();
+        super.pop();
     }
 
     protected T self() {
@@ -208,53 +167,44 @@ public abstract class BaseDialogFragment<T extends BaseDialogFragment<T>> extend
         return self();
     }
 
-    public void setDialogAnimator(DialogAnimator mDialogAnimator) {
-        this.mDialogAnimator = mDialogAnimator;
-    }
-
-    public void doShowAnimation() {
-        if (mDialogAnimator != null) {
-//            mDialogAnimator.setShowDuration(getShowAnimDuration());
-            mDialogAnimator.animateToShow(this);
-        }
-
-        if (mShadowAnimator != null) {
-//            mShadowAnimator.setShowDuration(getShowAnimDuration());
-            mShadowAnimator.animateToShow(this);
-        }
-    }
-
-    public void doDismissAnimation() {
-        if (mDialogAnimator != null) {
-//            mDialogAnimator.setDismissDuration(getDismissAnimDuration());
-            mDialogAnimator.animateToDismiss(this);
+    @Override
+    public final void doShowAnimation() {
+        if (mShadowAnimator == null) {
+            mShadowAnimator = onCreateShadowAnimator(rootView);
         }
         if (mShadowAnimator != null) {
-            mShadowAnimator.animateToDismiss(this);
+            mShadowAnimator.setShowDuration(getShowAnimDuration());
+            mShadowAnimator.setDismissDuration(getDismissAnimDuration());
+            mShadowAnimator.animateToShow();
         }
+        super.doShowAnimation();
     }
 
-    public void dismiss() {
-        postOnEnterAnimationEnd(() -> {
-            if (!isDismissing) {
-                isDismissing = true;
-                doDismissAnimation();
-
-                onDismiss();
-                getHandler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        BaseDialogFragment.super.popThis();
-                        isDismissing = false;
-                    }
-                }, getDismissAnimDuration());
-            }
-        });
+    @Override
+    public final void doDismissAnimation() {
+        if (mShadowAnimator != null) {
+            mShadowAnimator.setDismissDuration(getDismissAnimDuration());
+            mShadowAnimator.animateToDismiss();
+        }
+        super.doDismissAnimation();
     }
 
+    @Override
+    public void onDismissAnimationEnd() {
+        super.onDismissAnimationEnd();
+    }
+
+    @Override
     protected void onDismiss() {
         if (onDismissListener != null) {
-            onDismissListener.onDismiss();
+            onDismissListener.onDismiss(self());
+        }
+    }
+
+    @Override
+    protected void onCancel() {
+        if (onCancelListener != null) {
+            onCancelListener.onCancel(self());
         }
     }
 
@@ -328,6 +278,11 @@ public abstract class BaseDialogFragment<T extends BaseDialogFragment<T>> extend
 
     public T setDialogBackground(Drawable bgDrawable) {
         this.bgDrawable = bgDrawable;
+        return self();
+    }
+
+    public T setDialogBackgroundColor(int color) {
+        this.bgDrawable = new ColorDrawable(color);
         return self();
     }
 
@@ -411,13 +366,14 @@ public abstract class BaseDialogFragment<T extends BaseDialogFragment<T>> extend
         return self();
     }
 
-    private void interceptTouch() {
+    protected void interceptTouch() {
         rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!cancelable || !cancelableInTouchOutside) {
                     return;
                 }
+                onCancel();
                 dismiss();
             }
         });
@@ -440,9 +396,13 @@ public abstract class BaseDialogFragment<T extends BaseDialogFragment<T>> extend
         return self();
     }
 
-    public T setOnDismissListener(IDialog.OnDismissListener onDismissListener) {
+    public T setOnDismissListener(IDialog.OnDismissListener<T> onDismissListener) {
         this.onDismissListener = onDismissListener;
         return self();
     }
 
+    public T setOnCancelListener(IDialog.OnCancelListener<T> onCancelListener) {
+        this.onCancelListener = onCancelListener;
+        return self();
+    }
 }

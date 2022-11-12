@@ -4,14 +4,12 @@ import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 
-import com.zpj.fragmentation.dialog.base.BaseDialogFragment;
 import com.zpj.fragmentation.dialog.enums.DialogAnimation;
 
 /**
- * Description: 平移动画
- * Create by dance, at 2018/12/9
+ * 平移动画
  */
-public class TranslateAlphaAnimator extends AbsDialogAnimator<ViewPropertyAnimator, ViewPropertyAnimator> {
+public class TranslateAlphaAnimator extends ViewPropertyDialogAnimator {
 
     //动画起始坐标
     private float startTranslationX, startTranslationY;
@@ -28,18 +26,6 @@ public class TranslateAlphaAnimator extends AbsDialogAnimator<ViewPropertyAnimat
         startTranslationX = targetView.getTranslationX();
         startTranslationY = targetView.getTranslationY();
     }
-
-//    @Override
-//    public void initAnimator() {
-//        defTranslationX = targetView.getTranslationX();
-//        defTranslationY = targetView.getTranslationY();
-//
-//        targetView.setAlpha(0);
-//        // 设置移动坐标
-//        applyTranslation();
-//        startTranslationX = targetView.getTranslationX();
-//        startTranslationY = targetView.getTranslationY();
-//    }
 
     private void applyTranslation() {
 //        int halfWidthOffset = ScreenUtils.getScreenWidth(targetView.getContext())/2 - targetView.getMeasuredWidth()/2;
@@ -61,18 +47,16 @@ public class TranslateAlphaAnimator extends AbsDialogAnimator<ViewPropertyAnimat
     }
 
     @Override
-    public ViewPropertyAnimator onCreateShowAnimator(BaseDialogFragment<?> fragment) {
-        return targetView.animate()
-                .translationX(defTranslationX)
+    public void initShowAnimator(ViewPropertyAnimator animator) {
+        animator.translationX(defTranslationX)
                 .translationY(defTranslationY)
                 .alpha(1f)
                 .setInterpolator(new FastOutSlowInInterpolator());
     }
 
     @Override
-    public ViewPropertyAnimator onCreateDismissAnimator(BaseDialogFragment<?> fragment) {
-        return targetView.animate()
-                .translationX(startTranslationX)
+    public void initDismissAnimator(ViewPropertyAnimator animator) {
+        animator.translationX(startTranslationX)
                 .translationY(startTranslationY)
                 .alpha(0f)
                 .setInterpolator(new FastOutSlowInInterpolator());

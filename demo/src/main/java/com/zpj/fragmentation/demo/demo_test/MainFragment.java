@@ -23,16 +23,14 @@ import com.zpj.fragmentation.dialog.IDialog;
 import com.zpj.fragmentation.dialog.ZDialog;
 import com.zpj.fragmentation.dialog.impl.ArrowMenuDialogFragment;
 import com.zpj.fragmentation.dialog.impl.AttachListDialogFragment;
-import com.zpj.fragmentation.dialog.impl.BottomDragListDialogFragment;
 import com.zpj.fragmentation.dialog.impl.CheckDialogFragment;
 import com.zpj.fragmentation.dialog.impl.ImageViewerDialogFragment;
 import com.zpj.fragmentation.dialog.impl.InputDialogFragment;
 import com.zpj.fragmentation.dialog.impl.LoadingDialogFragment;
-import com.zpj.fragmentation.dialog.impl.SimpleSelectDialogFragment;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
 import com.zpj.recyclerview.EasyViewHolder;
 import com.zpj.recyclerview.IEasy;
-import com.zpj.widget.checkbox.SmoothCheckBox;
+import com.zpj.widget.checkbox.ZCheckBox;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,9 +88,9 @@ public class MainFragment extends SimpleFragment {
                         .setTitle("内存使用情况")
                         .setContent(R.string.sign_in_success)
 //                        .setAutoDismiss(false)
-                        .setPositiveButton(new IDialog.OnButtonClickListener<ZDialog.AlertDialogImpl>() {
+                        .setPositiveButton(new IDialog.OnButtonClickListener<ZDialog.AlertDialogFragmentImpl>() {
                             @Override
-                            public void onClick(ZDialog.AlertDialogImpl fragment, int which) {
+                            public void onClick(ZDialog.AlertDialogFragmentImpl fragment, int which) {
                                 fragment.start(new TestDialogFragment());
                             }
                         })
@@ -107,15 +105,14 @@ public class MainFragment extends SimpleFragment {
                         .setTitle("内存使用情况")
                         .setContent(R.string.sign_in_success)
 //                        .setAutoDismiss(false)
-                        .setPositiveButton(new IDialog.OnButtonClickListener<ZDialog.AlertDialogImpl>() {
+                        .setPositiveButton(new IDialog.OnButtonClickListener<ZDialog.AlertDialogFragmentImpl>() {
                             @Override
-                            public void onClick(ZDialog.AlertDialogImpl fragment, int which) {
+                            public void onClick(ZDialog.AlertDialogFragmentImpl fragment, int which) {
                                 fragment.start(new TestDialogFragment());
                             }
                         })
                         .setGravity(Gravity.BOTTOM)
                         .setMarginHorizontal(getResources().getDimensionPixelSize(R.dimen.bottombar_height))
-                        .setDialogBackground(DialogThemeUtils.getCenterDialogBackground(context))
                         .show(MainFragment.this);
             }
         });
@@ -192,9 +189,9 @@ public class MainFragment extends SimpleFragment {
                             subtitleView.setText(String.valueOf(position));
                         }
                     })
-                    .onSingleSelect(new IDialog.OnSingleSelectListener<String, ZDialog.SelectDialogImpl<String>>() {
+                    .onSingleSelect(new IDialog.OnSingleSelectListener<String, ZDialog.SelectDialogFragmentImpl<String>>() {
                         @Override
-                        public void onSelect(ZDialog.SelectDialogImpl<String> dialog, int position, String item) {
+                        public void onSelect(ZDialog.SelectDialogFragmentImpl<String> dialog, int position, String item) {
                             Toast.makeText(context, item, Toast.LENGTH_SHORT).show();
                         }
                     })
@@ -222,9 +219,9 @@ public class MainFragment extends SimpleFragment {
                             subtitleView.setText(String.valueOf(position));
                         }
                     })
-                    .onMultiSelect(new IDialog.OnMultiSelectListener<String, ZDialog.SelectDialogImpl<String>>() {
+                    .onMultiSelect(new IDialog.OnMultiSelectListener<String, ZDialog.SelectDialogFragmentImpl<String>>() {
                         @Override
-                        public void onSelect(ZDialog.SelectDialogImpl<String> dialog, List<Integer> selected, List<String> list) {
+                        public void onSelect(ZDialog.SelectDialogFragmentImpl<String> dialog, List<Integer> selected, List<String> list) {
                             Toast.makeText(context, Arrays.toString(list.toArray()), Toast.LENGTH_SHORT).show();
                         }
                     })
@@ -241,7 +238,7 @@ public class MainFragment extends SimpleFragment {
             for (int i = 0; i < 50; i++) {
                 list.add(String.valueOf(System.currentTimeMillis() * Math.random()));
             }
-            new SimpleSelectDialogFragment()
+            ZDialog.simpleSelect()
                     .setTitles(list)
                     .setOnItemClickListener(new IEasy.OnItemClickListener<String>() {
                         @Override
@@ -256,18 +253,26 @@ public class MainFragment extends SimpleFragment {
         findViewById(R.id.btn_test_bottom).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TestBottomDragDialogFragment().show(context);
+//                new TestBottomDragDialogFragment().show(context);
+                new TestOverDragBottomDialogFragment().show(context);
             }
         });
 
         findViewById(R.id.btn_test_bottom_margin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TestBottomDragDialogFragment()
-                        .setDialogBackground(DialogThemeUtils.getCenterDialogBackground(context))
+
+                new TestOverDragBottomDialogFragment()
+                        .setDialogBackgroundColor(Color.TRANSPARENT)
                         .setMarginHorizontal(getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin))
                         .setMarginBottom(getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin))
                         .show(context);
+
+//                new TestBottomDragDialogFragment()
+//                        .setDialogBackground(DialogThemeUtils.getCenterDialogBackground(context))
+//                        .setMarginHorizontal(getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin))
+//                        .setMarginBottom(getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin))
+//                        .show(context);
             }
         });
 
@@ -276,7 +281,7 @@ public class MainFragment extends SimpleFragment {
             for (int i = 0; i < 50; i++) {
                 list.add(String.valueOf(i));
             }
-            new BottomDragListDialogFragment<String>()
+            ZDialog.bottomList()
                     .setTitle("BottomListDialogFragment")
                     .setItemLayoutId(R.layout._dialog_item_select)
                     .onBindViewHolder(new IEasy.OnBindViewHolderListener<String>() {
@@ -326,7 +331,7 @@ public class MainFragment extends SimpleFragment {
                         .setSingleLine(false)
                         .setSelection(2, 7)
                         .setTitle("This is Title")
-                        .setContent("This is info")
+                        .setTipText("This is info")
                         .show(MainFragment.this);
             }
         });
@@ -340,7 +345,7 @@ public class MainFragment extends SimpleFragment {
                         .setSingleLine(false)
                         .setSelection(2, 7)
                         .setTitle("This is Title")
-                        .setContent("This is info")
+                        .setTipText("This is info")
                         .show(MainFragment.this);
             }
         });
@@ -351,9 +356,9 @@ public class MainFragment extends SimpleFragment {
                 new CheckDialogFragment()
                         .setChecked(true)
                         .setCheckTitle("This is checkTitle")
-                        .setOnCheckedChangeListener(new SmoothCheckBox.OnCheckedChangeListener() {
+                        .setOnCheckedChangeListener(new ZCheckBox.OnCheckedChangeListener() {
                             @Override
-                            public void onCheckedChanged(SmoothCheckBox checkBox, boolean isChecked) {
+                            public void onCheckedChanged(ZCheckBox checkBox, boolean isChecked) {
                                 Toast.makeText(context, "isChecked=" + isChecked, Toast.LENGTH_SHORT).show();
                             }
                         })
@@ -369,9 +374,9 @@ public class MainFragment extends SimpleFragment {
                 new CheckDialogFragment()
                         .setChecked(false)
                         .setCheckTitle("This is checkTitle")
-                        .setOnCheckedChangeListener(new SmoothCheckBox.OnCheckedChangeListener() {
+                        .setOnCheckedChangeListener(new ZCheckBox.OnCheckedChangeListener() {
                             @Override
-                            public void onCheckedChanged(SmoothCheckBox checkBox, boolean isChecked) {
+                            public void onCheckedChanged(ZCheckBox checkBox, boolean isChecked) {
                                 Toast.makeText(context, "isChecked=" + isChecked, Toast.LENGTH_SHORT).show();
                             }
                         })
@@ -394,6 +399,12 @@ public class MainFragment extends SimpleFragment {
                             public void onSelect(AttachListDialogFragment<String> fragment, int position, String text) {
                                 Toast.makeText(context, "position=" + position + " text=" + text, Toast.LENGTH_SHORT).show();
                                 fragment.dismiss();
+                            }
+                        })
+                        .onBindTitle(new IDialog.ViewBinder<TextView, String>() {
+                            @Override
+                            public void onBindView(TextView view, String item, int position) {
+                                view.setText("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa " + item);
                             }
                         })
                         .setItems(list)
@@ -498,8 +509,6 @@ public class MainFragment extends SimpleFragment {
     private void showArrowMenuDialogFragment(int o, View view) {
         new ArrowMenuDialogFragment()
                 .setOptionMenus("详细信息", "分享", "卸载", "打开")
-//                .setShadowColor(Color.BLACK)
-                .setShadowRadius(8)
                 .setOrientation(o)
                 .setOnItemClickListener((position, menu) -> {
                     Toast.makeText(context, menu.getTitle(), Toast.LENGTH_SHORT).show();

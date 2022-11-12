@@ -1,5 +1,6 @@
 package com.zpj.fragmentation.dialog;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.zpj.fragmentation.dialog.base.BaseDialogFragment;
@@ -8,8 +9,12 @@ import java.util.List;
 
 public interface IDialog {
 
-    interface OnDismissListener {
-        void onDismiss();
+    interface OnDismissListener<T> {
+        void onDismiss(T dialog);
+    }
+
+    interface OnCancelListener<T> {
+        void onCancel(T dialog);
     }
 
     /** The identifier for the positive button. */
@@ -22,7 +27,7 @@ public interface IDialog {
     int BUTTON_NEUTRAL = -3;
 
     interface OnButtonClickListener<T extends BaseDialogFragment<T>> {
-        void onClick(T fragment, int which);
+        void onClick(@NonNull T fragment, int which);
     }
 
     interface ViewBinder<V extends View, T> {
@@ -30,7 +35,7 @@ public interface IDialog {
     }
 
     interface OnViewCreateListener<T> {
-        void onViewCreate(T fragment, View view);
+        void onViewCreate(@NonNull T fragment, View view);
     }
 
     interface OnMultiSelectListener<T, S> {

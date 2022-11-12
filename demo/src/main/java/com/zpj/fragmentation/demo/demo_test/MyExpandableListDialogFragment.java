@@ -7,12 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.zpj.fragmentation.demo.R;
-import com.zpj.fragmentation.dialog.animator.DialogAnimator;
+import com.zpj.fragmentation.dialog.DialogAnimator;
 import com.zpj.fragmentation.dialog.animator.ScaleAlphaAnimator;
 import com.zpj.fragmentation.dialog.enums.DialogAnimation;
 import com.zpj.fragmentation.dialog.impl.ListDialogFragment;
 import com.zpj.recyclerview.MultiData;
-import com.zpj.recyclerview.MultiRecyclerViewWrapper;
+import com.zpj.recyclerview.MultiRecycler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,14 +54,12 @@ public class MyExpandableListDialogFragment extends ListDialogFragment<MultiData
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
-        tvTitle.setTextColor(getResources().getColor(R.color.colorPrimary));
+        mTvTitle.setTextColor(getResources().getColor(R.color.colorPrimary));
     }
 
     @Override
     protected void initRecyclerView(RecyclerView recyclerView, List<MultiData<?>> list) {
-        MultiRecyclerViewWrapper.with(recyclerView)
-                .setData(list)
-                .build();
+        MultiRecycler.with(recyclerView, list).build();
     }
 
     public MyExpandableListDialogFragment setAnchorView(View anchorView) {

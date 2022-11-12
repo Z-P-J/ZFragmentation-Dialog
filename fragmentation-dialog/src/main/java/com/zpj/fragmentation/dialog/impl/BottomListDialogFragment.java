@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ListDialogFragment<T, S extends ListDialogFragment<T, S>> extends ActionDialogFragment<S> {
+public class BottomListDialogFragment<T, S extends BottomListDialogFragment<T, S>> extends BottomActionDialogFragment<S> {
 
     protected final List<T> list = new ArrayList<>();
 
