@@ -1,7 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-group='com.github.Z-P-J'
-
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion 28
@@ -46,4 +44,25 @@ dependencies {
     implementation 'com.github.Z-P-J:ZRecyclerView:1.0.3'
     implementation 'com.github.Z-P-J:ZCheckBox:1.0.0'
 
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                groupId = 'com.zpj.fragmentation'
+                artifactId = 'ZFragmentation-Dialog'
+                version = '1.0.0'
+            }
+            debug(MavenPublication) {
+                from components.debug
+
+                groupId = 'com.zpj.fragmentation'
+                artifactId = 'ZFragmentation-Dialog'
+                version = '1.0.0'
+            }
+        }
+    }
 }
