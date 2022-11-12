@@ -1,8 +1,6 @@
-package com.zpj.fragmentation.dialog.utils;
+package com.zpj.fragmentation.dialog.imageviewer;
 
 import android.graphics.drawable.Drawable;
-
-import com.zpj.fragmentation.dialog.widget.ImageViewContainer;
 
 public interface ImageLoader<T> {
     /**

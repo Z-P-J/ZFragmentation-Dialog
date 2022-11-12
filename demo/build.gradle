@@ -70,5 +70,6 @@ dependencies {
     implementation 'com.github.Z-P-J:ZCheckBox:1.0.0'
     implementation 'com.github.Z-P-J:ZFragmentation:2.0.0'
     implementation project(':fragmentation-dialog')
+    implementation project(':fragmentation-dialog-imageviewer')
 }
 

@@ -1,11 +1,12 @@
-package com.zpj.fragmentation.dialog.utils;
+package com.zpj.fragmentation.dialog.imageviewer;
 
 import android.content.ContentResolver;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
@@ -13,7 +14,6 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.zpj.fragmentation.dialog.widget.ImageViewContainer;
 
 import java.io.File;
 import java.util.HashMap;
@@ -22,11 +22,11 @@ import java.util.regex.Pattern;
 public class DefaultImageLoader<T> implements ImageLoader<T> {
     private static final Pattern webPattern = Pattern.compile("http[s]*://[[[^/:]&&[a-zA-Z_0-9]]\\.]+(:\\d+)?(/[a-zA-Z_0-9]+)*(/[a-zA-Z_0-9]*([a-zA-Z_0-9]+\\.[a-zA-Z_0-9]+)*)?(\\?(&?[a-zA-Z_0-9]+=[%[a-zA-Z_0-9]-]*)*)*(#[[a-zA-Z_0-9]|-]+)?(.jpg|.png|.gif|.jpeg)?");
     private static final String ASSET_PATH_SEGMENT = "android_asset";
-    private static final HashMap<String, ImageLoader.LoadCallback> loadCallbackMap = new HashMap<>();
+    private static final HashMap<String, LoadCallback> loadCallbackMap = new HashMap<>();
     private static final HashMap<String, ImageFetcher.ImageDownLoadListener> imageDownLoadListenerMap = new HashMap<>();
 
     @Override
-    public void loadImage(final T url, final ImageLoader.LoadCallback callback, final ImageViewContainer imageView, final String unique) {
+    public void loadImage(final T url, final LoadCallback callback, final ImageViewContainer imageView, final String unique) {
         addLoadCallback(unique, callback);
         String link = url.toString();
         Uri uri = Uri.parse(link);
@@ -63,6 +63,7 @@ public class DefaultImageLoader<T> implements ImageLoader<T> {
 
             @Override
             public void onSuccess() {
+
                 loadImageFromLocal(ImageFetcher.getCachedPath(url), unique, imageView);
             }
 
@@ -100,8 +101,6 @@ public class DefaultImageLoader<T> implements ImageLoader<T> {
                     onLoadFailed(errorDrawable);
                 }
             });
-//            imageView.showGif(new File(path));
-//            onFinishLoad(unique, null);
         } else {
             imageView.getPhotoView().setOnImageEventListener(new SubsamplingScaleImageView.OnImageEventListener() {
                 @Override
@@ -142,7 +141,7 @@ public class DefaultImageLoader<T> implements ImageLoader<T> {
 
     }
 
-    public static void addLoadCallback(String unique, ImageLoader.LoadCallback callback) {
+    public static void addLoadCallback(String unique, LoadCallback callback) {
         loadCallbackMap.put(unique, callback);
     }
 
@@ -151,14 +150,14 @@ public class DefaultImageLoader<T> implements ImageLoader<T> {
     }
 
     public static void onFinishLoad(String unique, Drawable drawable) {
-        ImageLoader.LoadCallback loadCallback = loadCallbackMap.remove(unique);
+        LoadCallback loadCallback = loadCallbackMap.remove(unique);
         if (loadCallback != null) {
             loadCallback.loadFinish(drawable);
         }
     }
 
     public static void onProgress(String unique, float progress) {
-        ImageLoader.LoadCallback loadCallback = loadCallbackMap.get(unique);
+        LoadCallback loadCallback = loadCallbackMap.get(unique);
         if (loadCallback != null) {
             loadCallback.progress(progress);
         }

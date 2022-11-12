@@ -1,4 +1,4 @@
-package com.zpj.fragmentation.dialog.interfaces;
+package com.zpj.fragmentation.dialog.imageviewer;
 
 import android.content.Context;
 import android.view.View;

@@ -5,16 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.zpj.fragmentation.dialog.widget.PhotoViewContainer
+    <com.zpj.fragmentation.dialog.imageviewer.PhotoViewContainer
         android:id="@+id/photoViewContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.zpj.fragmentation.dialog.widget.HackyViewPager
+        <com.zpj.fragmentation.dialog.imageviewer.HackyViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-    </com.zpj.fragmentation.dialog.widget.PhotoViewContainer>
+    </com.zpj.fragmentation.dialog.imageviewer.PhotoViewContainer>
 
 </FrameLayout>

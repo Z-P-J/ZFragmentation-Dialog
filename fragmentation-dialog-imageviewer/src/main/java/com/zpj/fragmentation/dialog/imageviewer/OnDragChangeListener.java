@@ -1,4 +1,4 @@
-package com.zpj.fragmentation.dialog.interfaces;
+package com.zpj.fragmentation.dialog.imageviewer;
 
 public interface OnDragChangeListener {
     void onRelease();

@@ -1,4 +1,4 @@
-package com.zpj.fragmentation.dialog.impl;
+package com.zpj.fragmentation.dialog.imageviewer;
 
 import android.animation.Animator;
 import android.animation.ArgbEvaluator;
@@ -9,8 +9,18 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.transition.ChangeBounds;
 import androidx.transition.ChangeImageTransform;
 import androidx.transition.ChangeTransform;
@@ -21,28 +31,10 @@ import androidx.transition.TransitionSet;
 import androidx.transition.TransitionValues;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.LinearInterpolator;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import com.bumptech.glide.load.resource.gif.GifDrawable;
-import com.zpj.fragmentation.dialog.R;
 import com.zpj.fragmentation.dialog.DialogAnimator;
 import com.zpj.fragmentation.dialog.base.BaseDialogFragment;
-import com.zpj.fragmentation.dialog.interfaces.IProgressViewHolder;
-import com.zpj.fragmentation.dialog.interfaces.OnDragChangeListener;
-import com.zpj.fragmentation.dialog.utils.ImageLoader;
-import com.zpj.fragmentation.dialog.utils.DefaultImageLoader;
-import com.zpj.fragmentation.dialog.widget.HackyViewPager;
-import com.zpj.fragmentation.dialog.widget.ImageViewContainer;
-import com.zpj.fragmentation.dialog.widget.PhotoViewContainer;
-import com.zpj.fragmentation.dialog.widget.PlaceholderImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,15 +52,37 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment<ImageViewer
     protected OnSrcViewUpdateListener<T> srcViewUpdateListener;
     protected int position;
     protected Rect rect = null;
-    protected ImageView srcView; //动画起始的View，如果为null，移动和过渡动画效果会没有，只有弹窗的缩放功能
+
+    /**
+     * 动画起始的View，如果为null，移动和过渡动画效果会没有，只有弹窗的缩放功能
+     */
+    protected ImageView srcView;
     protected PlaceholderImageView snapshotView;
     protected boolean isAnimationEnd;
-    protected int placeholderColor = -1; //占位View的颜色
-    protected int placeholderStrokeColor = -1; // 占位View的边框色
-    protected int placeholderRadius = -1; // 占位View的圆角
-    protected boolean isInfinite = false;//是否需要无限滚动
+
+    /**
+     * 占位View的颜色
+     */
+    protected int placeholderColor = -1;
+
+    /**
+     * 占位View的边框色
+     */
+    protected int placeholderStrokeColor = -1;
+
+    /**
+     * 占位View的圆角
+     */
+    protected int placeholderRadius = -1;
+
+    /**
+     * 是否需要无限滚动
+     */
+    protected boolean isInfinite = false;
+
     protected View customView;
-    protected int bgColor = Color.rgb(32, 36, 46);//弹窗的背景颜色，可以自定义
+
+    protected final int bgColor = Color.rgb(32, 36, 46);//弹窗的背景颜色，可以自定义
 
     protected IProgressViewHolder<? extends View> progressViewHolder = new IProgressViewHolder<ProgressBar>() {
         @Override
@@ -102,7 +116,7 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment<ImageViewer
 
     @Override
     protected DialogAnimator onCreateDialogAnimator(ViewGroup contentView) {
-        return null;
+        return new ImageViewerDialogAnimator();
     }
 
     @Override
@@ -160,8 +174,6 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment<ImageViewer
 //        pager.setOffscreenPageLimit(1);
         pager.setCurrentItem(position);
         pager.setVisibility(View.INVISIBLE);
-//        addOrUpdateSnapshot();
-//        if (isInfinite) pager.setOffscreenPageLimit(urls.size() / 2);
     }
 
     private class ImageViewerDialogAnimator implements DialogAnimator {
@@ -233,13 +245,7 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment<ImageViewer
 
         if (customView != null) customView.setVisibility(View.VISIBLE);
         if (srcView == null) {
-//            photoViewContainer.setBackgroundColor(bgColor);
             pager.setVisibility(View.VISIBLE);
-//            showPagerIndicator();
-//            photoViewContainer.isReleasing = false;
-//            doAfterShow();
-//            if (customView != null)
-//                customView.setAlpha(1f);
             animateShadowBg(bgColor, getShowAnimDuration(), new DialogAnimator.Listener() {
                 @Override
                 public void onAnimationStart() {
@@ -327,9 +333,6 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment<ImageViewer
                     }
                 }
             });
-//                XPopup.getAnimationDuration()
-//                if (customView != null)
-//                    customView.animate().alpha(1f).setDuration(DEFAULT_ANIM_DURATION).start();
         });
 
     }
@@ -434,10 +437,6 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment<ImageViewer
             }
         }
         if (srcView == null) {
-//            photoViewContainer.setBackgroundColor(Color.TRANSPARENT);
-//            doAfterDismiss();
-//            pager.setVisibility(View.INVISIBLE);
-//            placeholderView.setVisibility(View.INVISIBLE);
             float startScaleX = pager.getScaleX();
             float startScaleY = pager.getScaleY();
             final float startAlpha;
@@ -477,11 +476,6 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment<ImageViewer
             return;
         }
         TransitionManager.endTransitions((ViewGroup) snapshotView.getParent());
-//        ImageViewContainer current = pager.findViewWithTag(position);
-//        if (current.getPlaceholder().getDrawable() instanceof GifDrawable) {
-//            srcView.setImageDrawable(current.getPlaceholder().getDrawable());
-//            snapshotView.setImageDrawable(current.getPlaceholder().getDrawable());
-//        }
         pager.setVisibility(View.INVISIBLE);
         snapshotView.setVisibility(View.VISIBLE);
         photoViewContainer.isReleasing = true;
@@ -535,7 +529,7 @@ public class ImageViewerDialogFragment<T> extends BaseDialogFragment<ImageViewer
             @Override
             public void onAnimationUpdate(float percent) {
                 if (customView != null) {
-                    customView.setAlpha(1 -  percent);
+                    customView.setAlpha(1 - percent);
                 }
                 onDismissAnimationUpdate(percent);
             }

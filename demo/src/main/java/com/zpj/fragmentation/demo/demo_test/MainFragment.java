@@ -3,8 +3,6 @@ package com.zpj.fragmentation.demo.demo_test;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -14,6 +12,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -21,10 +22,11 @@ import com.zpj.fragmentation.SimpleFragment;
 import com.zpj.fragmentation.demo.R;
 import com.zpj.fragmentation.dialog.IDialog;
 import com.zpj.fragmentation.dialog.ZDialog;
+import com.zpj.fragmentation.dialog.imageviewer.ImageViewerDialogFragment;
+import com.zpj.fragmentation.dialog.imageviewer.ZImageViewer;
 import com.zpj.fragmentation.dialog.impl.ArrowMenuDialogFragment;
 import com.zpj.fragmentation.dialog.impl.AttachListDialogFragment;
 import com.zpj.fragmentation.dialog.impl.CheckDialogFragment;
-import com.zpj.fragmentation.dialog.impl.ImageViewerDialogFragment;
 import com.zpj.fragmentation.dialog.impl.InputDialogFragment;
 import com.zpj.fragmentation.dialog.impl.LoadingDialogFragment;
 import com.zpj.fragmentation.dialog.utils.DialogThemeUtils;
@@ -435,12 +437,12 @@ public class MainFragment extends SimpleFragment {
         });
 
         ImageView imageView = findViewById(R.id.iv_test_image_viewer);
-        String url = "https://imgo.shouji.com.cn/share/2020/20210211/4871736527_s.jpg";
-        String originalUrl = "https://imgo.shouji.com.cn/share/2020/20210211/4871736527.png"; // "https://avatar.shouji.com.cn/20201005/1850813592.jpg"
+        String url = "https://img1.wallspic.com/previews/8/8/3/0/7/170388/170388-qi_fen-xing_zhi-zi_ran_jing_guan-x750.jpg";
+        String originalUrl = "https://img1.wallspic.com/attachments/originals/8/8/3/0/7/170388-qi_fen-xing_zhi-zi_ran_jing_guan-4016x6016.jpg";
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new ImageViewerDialogFragment<String>()
+                ZImageViewer.create()
                         .setSingleSrcView(imageView, originalUrl)
                         .show(MainFragment.this);
             }

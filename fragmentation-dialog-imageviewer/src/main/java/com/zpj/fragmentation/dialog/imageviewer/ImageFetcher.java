@@ -1,4 +1,4 @@
-package com.zpj.fragmentation.dialog.utils;
+package com.zpj.fragmentation.dialog.imageviewer;
 
 import android.graphics.BitmapFactory;
 import android.os.Handler;

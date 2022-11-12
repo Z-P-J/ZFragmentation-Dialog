@@ -6,7 +6,6 @@ import com.zpj.fragmentation.dialog.impl.AttachListDialogFragment;
 import com.zpj.fragmentation.dialog.impl.BottomListDialogFragment;
 import com.zpj.fragmentation.dialog.impl.BottomSelectDialogFragment;
 import com.zpj.fragmentation.dialog.impl.CheckDialogFragment;
-import com.zpj.fragmentation.dialog.impl.ImageViewerDialogFragment;
 import com.zpj.fragmentation.dialog.impl.InputDialogFragment;
 import com.zpj.fragmentation.dialog.impl.ListDialogFragment;
 import com.zpj.fragmentation.dialog.impl.LoadingDialogFragment;
@@ -49,14 +48,6 @@ public class ZDialog {
 
     public static LoadingDialogFragment loading() {
         return new LoadingDialogFragment();
-    }
-
-    public static <T> ImageViewerDialogFragment<T> imageViewer(Class<T> tClass) {
-        return new ImageViewerDialogFragment<>();
-    }
-
-    public static ImageViewerDialogFragment<String> imageViewer() {
-        return imageViewer(String.class);
     }
 
     public static <T> SelectDialogFragmentImpl<T> select(Class<T> tClass) {

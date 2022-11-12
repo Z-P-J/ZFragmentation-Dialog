@@ -1,9 +1,7 @@
-package com.zpj.fragmentation.dialog.widget;
+package com.zpj.fragmentation.dialog.imageviewer;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -11,9 +9,11 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.zpj.fragmentation.dialog.interfaces.IProgressViewHolder;
 
 public class ImageViewContainer extends FrameLayout {
 

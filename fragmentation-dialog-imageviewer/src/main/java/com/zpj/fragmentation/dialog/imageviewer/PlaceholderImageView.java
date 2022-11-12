@@ -13,17 +13,18 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package com.zpj.fragmentation.dialog.widget;
+package com.zpj.fragmentation.dialog.imageviewer;
 
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import androidx.appcompat.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
+
+import androidx.appcompat.widget.AppCompatImageView;
 
 public class PlaceholderImageView extends AppCompatImageView implements View.OnLayoutChangeListener {
 
@@ -32,7 +33,7 @@ public class PlaceholderImageView extends AppCompatImageView implements View.OnL
     private final Matrix mSuppMatrix = new Matrix();
     private final RectF mDisplayRect = new RectF();
 
-    private ScaleType mScaleType = ScaleType.FIT_CENTER;
+    private ImageView.ScaleType mScaleType = ImageView.ScaleType.FIT_CENTER;
 
     public PlaceholderImageView(Context context) {
         this(context, null);
@@ -44,12 +45,12 @@ public class PlaceholderImageView extends AppCompatImageView implements View.OnL
 
     public PlaceholderImageView(Context context, AttributeSet attr, int defStyle) {
         super(context, attr, defStyle);
-        super.setScaleType(ScaleType.MATRIX);
+        super.setScaleType(ImageView.ScaleType.MATRIX);
         addOnLayoutChangeListener(this);
     }
 
     @Override
-    public ScaleType getScaleType() {
+    public ImageView.ScaleType getScaleType() {
         return mScaleType;
     }
 
@@ -59,8 +60,8 @@ public class PlaceholderImageView extends AppCompatImageView implements View.OnL
     }
 
     @Override
-    public void setScaleType(ScaleType scaleType) {
-        if (scaleType != null && scaleType != ScaleType.MATRIX && scaleType != mScaleType) {
+    public void setScaleType(ImageView.ScaleType scaleType) {
+        if (scaleType != null && scaleType != ImageView.ScaleType.MATRIX && scaleType != mScaleType) {
             mScaleType = scaleType;
             update();
         }
@@ -160,17 +161,17 @@ public class PlaceholderImageView extends AppCompatImageView implements View.OnL
         mBaseMatrix.reset();
         final float widthScale = viewWidth / drawableWidth;
         final float heightScale = viewHeight / drawableHeight;
-        if (mScaleType == ScaleType.CENTER) {
+        if (mScaleType == ImageView.ScaleType.CENTER) {
             mBaseMatrix.postTranslate((viewWidth - drawableWidth) / 2F,
                     (viewHeight - drawableHeight) / 2F);
 
-        } else if (mScaleType == ScaleType.CENTER_CROP) {
+        } else if (mScaleType == ImageView.ScaleType.CENTER_CROP) {
             float scale = Math.max(widthScale, heightScale);
             mBaseMatrix.postScale(scale, scale);
             mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2F,
                     (viewHeight - drawableHeight * scale) / 2F);
 
-        } else if (mScaleType == ScaleType.CENTER_INSIDE) {
+        } else if (mScaleType == ImageView.ScaleType.CENTER_INSIDE) {
             float scale = Math.min(1.0f, Math.min(widthScale, heightScale));
             mBaseMatrix.postScale(scale, scale);
             mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2F,
